@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Analysis Quiz</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Literary Analysis Quiz</h1>
+            <p class="subtitle">Test your knowledge of plot, characters, point of view, and more</p>
+        </header>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+           
+
+            
+            <div class="question-count" id="question-count">Question 1 of 5</div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="results-container hidden" id="results-container">
+            <div class="book-icon">📚</div>
+            <div class="score" id="score"></div>
+            <div class="message" id="message"></div>
+            
+            <div class="results-details" id="results-details">
+                <!-- Results will be inserted here -->
+            </div>
+            <a href="../index.html" class="back-home-btn">← Back to Home</a>
+
+            <button id="restart-btn">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Full pool of questions and answers
+        const questionPool = [
+            {
+                question: "What is the definition of 'plot' in literary analysis?",
+                options: [
+                    "The sequence of events in a story",
+                    "The main message of the story",
+                    "The location and time period of the story",
+                    "The attitude of the writer towards the topic"
+                ],
+                correct: 0,
+                explanation: "The plot is the sequence of events in a story, including exposition, rising action, climax, falling action, and resolution."
+            },
+            {
+                question: "Which of the following is NOT part of the traditional plot structure?",
+                options: [
+                    "Exposition",
+                    "Rising Action",
+                    "Character Development",
+                    "Climax"
+                ],
+                correct: 2,
+                explanation: "Character development is an aspect of characterization, not a specific part of the traditional plot structure which includes exposition, rising action, climax, falling action, and resolution."
+            },
+            {
+                question: "Which character type is defined as 'the opposition or enemy of the main character'?",
+                options: [
+                    "Protagonist",
+                    "Antagonist",
+                    "Deuteragonist",
+                    "Confidante"
+                ],
+                correct: 1,
+                explanation: "The antagonist is the character who opposes the protagonist, creating conflict in the story."
+            },
+            {
+                question: "What is a 'dynamic character'?",
+                options: [
+                    "A character who changes over time",
+                    "A character with a fully developed personality",
+                    "A character notable for one personality trait",
+                    "A character who appears in multiple stories"
+                ],
+                correct: 0,
+                explanation: "A dynamic character undergoes significant internal change throughout the story, often as a result of the events they experience."
+            },
+            {
+                question: "Which point of view uses 'you' to address the reader?",
+                options: [
+                    "First Person",
+                    "Second Person",
+                    "Third Person Limited",
+                    "Third Person Omniscient"
+                ],
+                correct: 1,
+                explanation: "Second person point of view directly addresses the reader as 'you', making them a participant in the story."
+            },
+            {
+                question: "In 'The Lord of the Rings', what event represents the climax?",
+                options: [
+                    "Bilbo leaving the ring for Frodo",
+                    "Frodo and Sam entering Mordor",
+                    "Aragon becoming king",
+                    "The Fellowship being formed"
+                ],
+                correct: 1,
+                explanation: "The climax occurs when Frodo and Sam enter Mordor to destroy the One Ring, representing the turning point of the story."
+            },
+            {
+                question: "What is the difference between 'tone' and 'mood'?",
+                options: [
+                    "Tone is the writer's attitude, mood is the reader's feeling",
+                    "Tone is the reader's feeling, mood is the writer's attitude",
+                    "They are the same concept",
+                    "Tone relates to characters, mood relates to setting"
+                ],
+                correct: 0,
+                explanation: "Tone refers to the author's attitude toward the subject, while mood is the emotional atmosphere experienced by the reader."
+            },
+            {
+                question: "Which of these is an example of a motif?",
+                options: [
+                    "A single symbol that appears once in a story",
+                    "The main message of the story",
+                    "A recurring image that develops a theme",
+                    "The sequence of events in a story"
+                ],
+                correct: 2,
+                explanation: "A motif is a recurring element (such as an image, sound, or action) that has symbolic significance and contributes to the development of a theme."
+            },
+            {
+                question: "In 'The Great Gatsby', which character serves as a foil to Gatsby?",
+                options: [
+                    "Daisy Buchanan",
+                    "Tom Buchanan",
+                    "Nick Carraway",
+                    "Jordan Baker"
+                ],
+                correct: 1,
+                explanation: "Tom Buchanan serves as a foil to Gatsby, highlighting their differences in background, values, and approach to life."
+            },
+            {
+                question: "What literary technique presents a continuous flow of a character's thoughts?",
+                options: [
+                    "Innocent Eye",
+                    "Stream of Consciousness",
+                    "Third Person Omniscient",
+                    "Allegory"
+                ],
+                correct: 1,
+                explanation: "Stream of consciousness is a narrative technique that attempts to capture the continuous flow of a character's thoughts, feelings, and reactions."
+            },
+            {
+                question: "What is the 'exposition' in a plot?",
+                options: [
+                    "The turning point of the story",
+                    "The beginning where characters and setting are introduced",
+                    "The series of events building up to the conflict",
+                    "The conclusion of the story"
+                ],
+                correct: 1,
+                explanation: "Exposition is the beginning of the story where the main characters, setting, and background information are introduced."
+            },
+            {
+                question: "Which character type is a 'confidante'?",
+                options: [
+                    "The main character's enemy",
+                    "A character who appears in one scene",
+                    "The character the protagonist trusts",
+                    "A character who contrasts with the protagonist"
+                ],
+                correct: 2,
+                explanation: "A confidante is a character whom the protagonist trusts, often revealing their thoughts, intentions, and personality traits."
+            },
+            {
+                question: "What is an 'anti-hero'?",
+                options: [
+                    "A villain who becomes good",
+                    "A protagonist who lacks conventional heroic qualities",
+                    "A character who opposes the main character",
+                    "A character who appears in multiple stories"
+                ],
+                correct: 1,
+                explanation: "An anti-hero is a protagonist who lacks conventional heroic qualities such as courage, morality, or idealism, often characterized by imperfections."
+            },
+            {
+                question: "Which point of view is 'third person omniscient'?",
+                options: [
+                    "The narrator knows everything about all characters",
+                    "The narrator is a character in the story",
+                    "The narrator addresses the reader as 'you'",
+                    "The narrator only knows what one character knows"
+                ],
+                correct: 0,
+                explanation: "In third person omniscient point of view, the narrator knows all the thoughts, feelings, and actions of every character in the story."
+            },
+            {
+                question: "What is 'symbolism' in literature?",
+                options: [
+                    "The sequence of events in a story",
+                    "Using objects to represent ideas or qualities",
+                    "The attitude of the writer",
+                    "The emotional feeling of the reader"
+                ],
+                correct: 1,
+                explanation: "Symbolism is the use of objects, characters, figures, or colors to represent abstract ideas or concepts beyond their literal meaning."
+            },
+
+    {
+        question: "What is the definition of 'plot' in literary analysis?",
+        options: [
+            "The sequence of events in a story",
+            "The main message of the story",
+            "The location and time period of the story",
+            "The attitude of the writer towards the topic"
+        ],
+        correct: 0,
+        explanation: "The plot is the sequence of events in a story, including exposition, rising action, climax, falling action, and resolution."
+    },
+    {
+        question: "Which of the following is NOT part of the traditional plot structure?",
+        options: [
+            "Exposition",
+            "Rising Action",
+            "Character Development",
+            "Climax"
+        ],
+        correct: 2,
+        explanation: "Character development is an aspect of characterization, not a specific part of the traditional plot structure."
+    },
+    {
+        question: "What is the 'exposition' in a plot?",
+        options: [
+            "The turning point of the story",
+            "The beginning where characters and setting are introduced",
+            "The series of events building up to the conflict",
+            "The conclusion of the story"
+        ],
+        correct: 1,
+        explanation: "Exposition is the beginning of the story where the main characters, setting, and background information are introduced."
+    },
+    {
+        question: "What happens during the 'rising action' phase?",
+        options: [
+            "The conflict is resolved",
+            "Events become complicated and build up to conflict",
+            "The story concludes",
+            "Characters are introduced"
+        ],
+        correct: 1,
+        explanation: "Rising action consists of events that build up to the main conflict and complicate the story."
+    },
+    {
+        question: "What is the 'climax' of a story?",
+        options: [
+            "The introduction of characters",
+            "The turning point where tension peaks",
+            "The resolution of all conflicts",
+            "The background setting"
+        ],
+        correct: 1,
+        explanation: "The climax is the highest point of tension and the turning point in the story."
+    },
+    {
+        question: "Which of these is an example of external conflict?",
+        options: [
+            "A character struggling with self-doubt",
+            "A character fighting against society",
+            "A character overcoming fear",
+            "A character making a moral decision"
+        ],
+        correct: 1,
+        explanation: "External conflict involves a character struggling against outside forces like society, nature, or other characters."
+    },
+    {
+        question: "What is the 'resolution' in plot structure?",
+        options: [
+            "The introduction of the main conflict",
+            "The highest point of tension",
+            "The conclusion or final outcome",
+            "The background information"
+        ],
+        correct: 2,
+        explanation: "The resolution is the part of the story where conflicts are resolved and the story concludes."
+    },
+    {
+        question: "Which character type is the main character of a story?",
+        options: [
+            "Antagonist",
+            "Protagonist",
+            "Deuteragonist",
+            "Foil"
+        ],
+        correct: 1,
+        explanation: "The protagonist is the main character around whom the story revolves."
+    },
+    {
+        question: "What is an 'antagonist'?",
+        options: [
+            "The hero of the story",
+            "The narrator of the story",
+            "The opposition or enemy of the main character",
+            "The love interest"
+        ],
+        correct: 2,
+        explanation: "The antagonist is the character who opposes or creates conflict for the protagonist."
+    },
+    {
+        question: "What is a 'deuteragonist'?",
+        options: [
+            "The main villain",
+            "The character closest to the protagonist who helps them",
+            "A character who appears in one scene",
+            "The narrator"
+        ],
+        correct: 1,
+        explanation: "Deuteragonists are secondary characters who support and help the protagonist in their quest."
+    },
+    {
+        question: "Which character type 'reveals the central character's thoughts and intentions'?",
+        options: [
+            "Antagonist",
+            "Foil",
+            "Confidante",
+            "Tertiary character"
+        ],
+        correct: 2,
+        explanation: "A confidante is a character the protagonist trusts, often revealing their inner thoughts and personality."
+    },
+    {
+        question: "What is a 'foil' character?",
+        options: [
+            "A character who contrasts with another character",
+            "The main character's love interest",
+            "The narrator of the story",
+            "A character who appears in multiple stories"
+        ],
+        correct: 0,
+        explanation: "A foil character provides contrast to highlight another character's qualities, usually the protagonist's."
+    },
+    {
+        question: "What defines a 'dynamic character'?",
+        options: [
+            "A character who stays the same throughout the story",
+            "A character who changes over time",
+            "A character with one personality trait",
+            "A stereotypical character"
+        ],
+        correct: 1,
+        explanation: "A dynamic character undergoes significant internal change or development throughout the story."
+    },
+    {
+        question: "What is a 'round character'?",
+        options: [
+            "A character with simple, one-dimensional traits",
+            "A fully developed, complex personality",
+            "A character who doesn't change",
+            "A minor character with few lines"
+        ],
+        correct: 1,
+        explanation: "A round character has a complex, fully developed personality that can grow or change throughout the story."
+    },
+    {
+        question: "What characterizes a 'flat character'?",
+        options: [
+            "Complex personality with multiple traits",
+            "Notable for one kind of personality trait",
+            "Changes significantly during the story",
+            "Appears in multiple stories"
+        ],
+        correct: 1,
+        explanation: "A flat character is defined by one dominant trait and doesn't undergo significant development."
+    },
+    {
+        question: "What is an 'anti-hero'?",
+        options: [
+            "A perfect hero with no flaws",
+            "A protagonist who lacks conventional heroic qualities",
+            "The main villain of the story",
+            "A character who helps the villain"
+        ],
+        correct: 1,
+        explanation: "An anti-hero is a protagonist who lacks traditional heroic qualities and may have imperfections or moral ambiguities."
+    },
+    {
+        question: "What are 'stock characters'?",
+        options: [
+            "Unique, original characters",
+            "Conventional or stereotypical character types",
+            "Characters who change significantly",
+            "Main characters with complex personalities"
+        ],
+        correct: 1,
+        explanation: "Stock characters are conventional, stereotypical characters that are instantly recognizable to audiences."
+    },
+    {
+        question: "What is a 'symbolic character'?",
+        options: [
+            "A character who represents an idea or aspect of society",
+            "A character with no deeper meaning",
+            "The main character's best friend",
+            "A character who tells the story"
+        ],
+        correct: 0,
+        explanation: "A symbolic character represents major ideas or aspects of society and reflects the story's main themes."
+    },
+    {
+        question: "What is 'first person point of view'?",
+        options: [
+            "The narrator knows all characters' thoughts",
+            "The story is told by a character using 'I'",
+            "The narrator addresses the reader as 'you'",
+            "An unknown narrator tells the story"
+        ],
+        correct: 1,
+        explanation: "First person POV features a narrator who is a character in the story, telling it from their perspective using 'I'."
+    },
+    {
+        question: "Which point of view uses 'you' to address the reader?",
+        options: [
+            "First Person",
+            "Second Person",
+            "Third Person Limited",
+            "Third Person Omniscient"
+        ],
+        correct: 1,
+        explanation: "Second person POV directly addresses the reader as 'you', making them a participant in the story."
+    },
+    {
+        question: "What is 'third person limited' point of view?",
+        options: [
+            "The narrator knows everything about all characters",
+            "The narrator is a character in the story",
+            "The narrator only knows what one character knows",
+            "The story is told through multiple 'I' narrators"
+        ],
+        correct: 2,
+        explanation: "Third person limited POV features an external narrator who only has access to one character's thoughts and perspective."
+    },
+    {
+        question: "What characterizes 'third person omniscient' point of view?",
+        options: [
+            "The narrator only knows one character's thoughts",
+            "The narrator is a character in the story",
+            "The narrator knows everything about all characters",
+            "The narrator addresses the reader directly"
+        ],
+        correct: 2,
+        explanation: "Third person omniscient POV features a narrator who knows all characters' thoughts, feelings, and actions."
+    },
+    {
+        question: "What is the 'innocent eye' narrative technique?",
+        options: [
+            "The story is told by an all-knowing narrator",
+            "The story is told through a child's perspective",
+            "Multiple characters tell the same story",
+            "The narrator addresses the reader as 'you'"
+        ],
+        correct: 1,
+        explanation: "Innocent eye narration presents the story through a child's perspective, with judgments different from adults."
+    },
+    {
+        question: "What is 'stream of consciousness'?",
+        options: [
+            "A structured, logical narrative",
+            "A continuous flow of a character's thoughts and emotions",
+            "A story told in chronological order",
+            "A narrator who knows everything"
+        ],
+        correct: 1,
+        explanation: "Stream of consciousness captures the continuous, fluid mental state of characters, often without logical structure."
+    },
+    {
+        question: "What is a 'theme' in literature?",
+        options: [
+            "The sequence of events",
+            "The main message or idea discussed",
+            "The time and place of the story",
+            "The narrator's perspective"
+        ],
+        correct: 1,
+        explanation: "The theme is the central idea, message, or topic that the author explores throughout the work."
+    },
+    {
+        question: "What does 'tone' refer to in literature?",
+        options: [
+            "The reader's emotional response",
+            "The writer's attitude toward the topic",
+            "The time period of the story",
+            "The main character's personality"
+        ],
+        correct: 1,
+        explanation: "Tone refers to the author's attitude toward the subject matter and audience, revealed through their writing style."
+    },
+    {
+        question: "What is 'mood' in literature?",
+        options: [
+            "The writer's attitude",
+            "The emotional feeling the reader experiences",
+            "The main message of the story",
+            "The sequence of events"
+        ],
+        correct: 1,
+        explanation: "Mood is the emotional atmosphere or feeling that the reader experiences while reading the work."
+    },
+    {
+        question: "What is 'symbolism' in literature?",
+        options: [
+            "The literal meaning of words",
+            "Using objects to represent ideas or qualities",
+            "The chronological order of events",
+            "The narrator's perspective"
+        ],
+        correct: 1,
+        explanation: "Symbolism uses objects, characters, or elements to represent abstract ideas or concepts beyond their literal meaning."
+    },
+    {
+        question: "What is a 'motif'?",
+        options: [
+            "A single symbol that appears once",
+            "A recurring element with symbolic significance",
+            "The main character's goal",
+            "The story's setting"
+        ],
+        correct: 1,
+        explanation: "A motif is a recurring image, sound, action, or other figure that has symbolic significance and develops themes."
+    },
+    {
+        question: "What does 'style' refer to in literature?",
+        options: [
+            "Only the vocabulary used",
+            "The techniques and language the writer uses",
+            "Just the sentence structure",
+            "Only the point of view"
+        ],
+        correct: 1,
+        explanation: "Style encompasses all the techniques a writer uses, including syntax, diction, point of view, tone, and figurative language."
+    }
+
+        ];
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const questionCountElement = document.getElementById('question-count');
+        const progressElement = document.getElementById('progress');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        const resultsDetailsElement = document.getElementById('results-details');
+        const restartButton = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizData = [];
+
+        // Initialize quiz
+        function initQuiz() {
+            quizData = getRandomQuestions(3);
+            userAnswers = new Array(quizData.length).fill(null);
+            currentQuestion = 0;
+            score = 0;
+            
+            showQuestion();
+            updateProgressBar();
+            updateNavigation();
+        }
+
+        // Get random questions from the pool
+        function getRandomQuestions(count) {
+            // Create a copy of the question pool
+            const shuffled = [...questionPool];
+            
+            // Shuffle the array using Fisher-Yates algorithm
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // Return the first 'count' questions
+            return shuffled.slice(0, count);
+        }
+
+        // Display current question
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            questionElement.textContent = question.question;
+            questionCountElement.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        // Select an option
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion();
+            updateNavigation();
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevButton.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButton.textContent = 'Finish';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressElement.style.width = `${progress}%`;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            } else {
+                showResults();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].correct) {
+                    score++;
+                }
+            }
+            
+            // Display results
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            scoreElement.textContent = `${score} / ${quizData.length}`;
+            
+            // Display message based on score
+            if (score === quizData.length) {
+                messageElement.textContent = "Perfect! You're a literary analysis expert!";
+            } else if (score >= quizData.length * 0.7) {
+                messageElement.textContent = "Great job! You have a solid understanding of literary concepts.";
+            } else if (score >= quizData.length * 0.5) {
+                messageElement.textContent = "Good effort! Review the concepts and try again.";
+            } else {
+                messageElement.textContent = "Keep studying! Literature analysis takes practice.";
+            }
+            
+            // Display detailed results
+            displayDetailedResults();
+        }
+
+        // Display detailed results with correct answers and user answers
+        function displayDetailedResults() {
+            resultsDetailsElement.innerHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('result-question');
+                questionElement.textContent = `${index + 1}. ${question.question}`;
+                resultItem.appendChild(questionElement);
+                
+                const answerComparison = document.createElement('div');
+                answerComparison.classList.add('answer-comparison');
+                
+                // User's answer
+                const userAnswerDiv = document.createElement('div');
+                userAnswerDiv.classList.add('user-answer');
+                if (userAnswers[index] === question.correct) {
+                    userAnswerDiv.classList.add('correct');
+                }
+                
+                const userLabel = document.createElement('div');
+                userLabel.classList.add('answer-label');
+                userLabel.textContent = 'Your Answer';
+                userAnswerDiv.appendChild(userLabel);
+                
+                const userAnswerText = document.createElement('div');
+                userAnswerText.textContent = userAnswers[index] !== null 
+                    ? question.options[userAnswers[index]] 
+                    : 'Not answered';
+                userAnswerDiv.appendChild(userAnswerText);
+                
+                // Correct answer
+                const correctAnswerDiv = document.createElement('div');
+                correctAnswerDiv.classList.add('correct-answer');
+                
+                const correctLabel = document.createElement('div');
+                correctLabel.classList.add('answer-label');
+                correctLabel.textContent = 'Correct Answer';
+                correctAnswerDiv.appendChild(correctLabel);
+                
+                const correctAnswerText = document.createElement('div');
+                correctAnswerText.textContent = question.options[question.correct];
+                correctAnswerDiv.appendChild(correctAnswerText);
+                
+                answerComparison.appendChild(userAnswerDiv);
+                answerComparison.appendChild(correctAnswerDiv);
+                resultItem.appendChild(answerComparison);
+                
+                // Explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.marginTop = '10px';
+                explanationDiv.style.fontStyle = 'italic';
+                explanationDiv.style.color = '#555';
+                explanationDiv.textContent = question.explanation;
+                resultItem.appendChild(explanationDiv);
+                
+                resultsDetailsElement.appendChild(resultItem);
+            });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            initQuiz();
+            quizContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+        }
+
+        // Event listeners
+        prevButton.addEventListener('click', prevQuestion);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
