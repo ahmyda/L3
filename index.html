@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Analysis Quiz</title>
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2B48C;
+            --accent: #A0522D;
+            --light: #F5F5DC;
+            --dark: #3E2723;
+            --correct: #4CAF50;
+            --incorrect: #F44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%238B4513" stroke-width="2"/></svg>');
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary);
+            color: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent), var(--secondary));
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--secondary);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-count {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--secondary);
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            padding: 15px;
+            background-color: var(--light);
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-container {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .score {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+        
+        .results-details {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--secondary);
+        }
+        
+        .result-item {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--secondary);
+        }
+        
+        .result-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .answer-comparison {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .user-answer, .correct-answer {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+        
+        .user-answer {
+            background-color: #ffebee;
+            border-left: 4px solid var(--incorrect);
+        }
+        
+        .user-answer.correct {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--correct);
+        }
+        
+        .correct-answer {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--correct);
+        }
+        
+        .answer-label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .book-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .answer-comparison {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Literary Analysis Quiz</h1>
+            <p class="subtitle">Test your knowledge of plot, characters, point of view, and more</p>
+        </header>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="question-count" id="question-count">Question 1 of 5</div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="results-container hidden" id="results-container">
+            <div class="book-icon">📚</div>
+            <div class="score" id="score"></div>
+            <div class="message" id="message"></div>
+            
+            <div class="results-details" id="results-details">
+                <!-- Results will be inserted here -->
+            </div>
+            
+            <button id="restart-btn">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Full pool of questions and answers
+        const questionPool = [
+            {
+                question: "What is the definition of 'plot' in literary analysis?",
+                options: [
+                    "The sequence of events in a story",
+                    "The main message of the story",
+                    "The location and time period of the story",
+                    "The attitude of the writer towards the topic"
+                ],
+                correct: 0,
+                explanation: "The plot is the sequence of events in a story, including exposition, rising action, climax, falling action, and resolution."
+            },
+            {
+                question: "Which of the following is NOT part of the traditional plot structure?",
+                options: [
+                    "Exposition",
+                    "Rising Action",
+                    "Character Development",
+                    "Climax"
+                ],
+                correct: 2,
+                explanation: "Character development is an aspect of characterization, not a specific part of the traditional plot structure which includes exposition, rising action, climax, falling action, and resolution."
+            },
+            {
+                question: "Which character type is defined as 'the opposition or enemy of the main character'?",
+                options: [
+                    "Protagonist",
+                    "Antagonist",
+                    "Deuteragonist",
+                    "Confidante"
+                ],
+                correct: 1,
+                explanation: "The antagonist is the character who opposes the protagonist, creating conflict in the story."
+            },
+            {
+                question: "What is a 'dynamic character'?",
+                options: [
+                    "A character who changes over time",
+                    "A character with a fully developed personality",
+                    "A character notable for one personality trait",
+                    "A character who appears in multiple stories"
+                ],
+                correct: 0,
+                explanation: "A dynamic character undergoes significant internal change throughout the story, often as a result of the events they experience."
+            },
+            {
+                question: "Which point of view uses 'you' to address the reader?",
+                options: [
+                    "First Person",
+                    "Second Person",
+                    "Third Person Limited",
+                    "Third Person Omniscient"
+                ],
+                correct: 1,
+                explanation: "Second person point of view directly addresses the reader as 'you', making them a participant in the story."
+            },
+            {
+                question: "In 'The Lord of the Rings', what event represents the climax?",
+                options: [
+                    "Bilbo leaving the ring for Frodo",
+                    "Frodo and Sam entering Mordor",
+                    "Aragon becoming king",
+                    "The Fellowship being formed"
+                ],
+                correct: 1,
+                explanation: "The climax occurs when Frodo and Sam enter Mordor to destroy the One Ring, representing the turning point of the story."
+            },
+            {
+                question: "What is the difference between 'tone' and 'mood'?",
+                options: [
+                    "Tone is the writer's attitude, mood is the reader's feeling",
+                    "Tone is the reader's feeling, mood is the writer's attitude",
+                    "They are the same concept",
+                    "Tone relates to characters, mood relates to setting"
+                ],
+                correct: 0,
+                explanation: "Tone refers to the author's attitude toward the subject, while mood is the emotional atmosphere experienced by the reader."
+            },
+            {
+                question: "Which of these is an example of a motif?",
+                options: [
+                    "A single symbol that appears once in a story",
+                    "The main message of the story",
+                    "A recurring image that develops a theme",
+                    "The sequence of events in a story"
+                ],
+                correct: 2,
+                explanation: "A motif is a recurring element (such as an image, sound, or action) that has symbolic significance and contributes to the development of a theme."
+            },
+            {
+                question: "In 'The Great Gatsby', which character serves as a foil to Gatsby?",
+                options: [
+                    "Daisy Buchanan",
+                    "Tom Buchanan",
+                    "Nick Carraway",
+                    "Jordan Baker"
+                ],
+                correct: 1,
+                explanation: "Tom Buchanan serves as a foil to Gatsby, highlighting their differences in background, values, and approach to life."
+            },
+            {
+                question: "What literary technique presents a continuous flow of a character's thoughts?",
+                options: [
+                    "Innocent Eye",
+                    "Stream of Consciousness",
+                    "Third Person Omniscient",
+                    "Allegory"
+                ],
+                correct: 1,
+                explanation: "Stream of consciousness is a narrative technique that attempts to capture the continuous flow of a character's thoughts, feelings, and reactions."
+            },
+            {
+                question: "What is the 'exposition' in a plot?",
+                options: [
+                    "The turning point of the story",
+                    "The beginning where characters and setting are introduced",
+                    "The series of events building up to the conflict",
+                    "The conclusion of the story"
+                ],
+                correct: 1,
+                explanation: "Exposition is the beginning of the story where the main characters, setting, and background information are introduced."
+            },
+            {
+                question: "Which character type is a 'confidante'?",
+                options: [
+                    "The main character's enemy",
+                    "A character who appears in one scene",
+                    "The character the protagonist trusts",
+                    "A character who contrasts with the protagonist"
+                ],
+                correct: 2,
+                explanation: "A confidante is a character whom the protagonist trusts, often revealing their thoughts, intentions, and personality traits."
+            },
+            {
+                question: "What is an 'anti-hero'?",
+                options: [
+                    "A villain who becomes good",
+                    "A protagonist who lacks conventional heroic qualities",
+                    "A character who opposes the main character",
+                    "A character who appears in multiple stories"
+                ],
+                correct: 1,
+                explanation: "An anti-hero is a protagonist who lacks conventional heroic qualities such as courage, morality, or idealism, often characterized by imperfections."
+            },
+            {
+                question: "Which point of view is 'third person omniscient'?",
+                options: [
+                    "The narrator knows everything about all characters",
+                    "The narrator is a character in the story",
+                    "The narrator addresses the reader as 'you'",
+                    "The narrator only knows what one character knows"
+                ],
+                correct: 0,
+                explanation: "In third person omniscient point of view, the narrator knows all the thoughts, feelings, and actions of every character in the story."
+            },
+            {
+                question: "What is 'symbolism' in literature?",
+                options: [
+                    "The sequence of events in a story",
+                    "Using objects to represent ideas or qualities",
+                    "The attitude of the writer",
+                    "The emotional feeling of the reader"
+                ],
+                correct: 1,
+                explanation: "Symbolism is the use of objects, characters, figures, or colors to represent abstract ideas or concepts beyond their literal meaning."
+            }
+        ];
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const questionCountElement = document.getElementById('question-count');
+        const progressElement = document.getElementById('progress');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        const resultsDetailsElement = document.getElementById('results-details');
+        const restartButton = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizData = [];
+
+        // Initialize quiz
+        function initQuiz() {
+            // Randomly select 5 questions from the pool
+            quizData = getRandomQuestions(5);
+            userAnswers = new Array(quizData.length).fill(null);
+            currentQuestion = 0;
+            score = 0;
+            
+            showQuestion();
+            updateProgressBar();
+            updateNavigation();
+        }
+
+        // Get random questions from the pool
+        function getRandomQuestions(count) {
+            // Create a copy of the question pool
+            const shuffled = [...questionPool];
+            
+            // Shuffle the array using Fisher-Yates algorithm
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // Return the first 'count' questions
+            return shuffled.slice(0, count);
+        }
+
+        // Display current question
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            questionElement.textContent = question.question;
+            questionCountElement.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        // Select an option
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion();
+            updateNavigation();
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevButton.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButton.textContent = 'Finish';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressElement.style.width = `${progress}%`;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            } else {
+                showResults();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].correct) {
+                    score++;
+                }
+            }
+            
+            // Display results
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            scoreElement.textContent = `${score} / ${quizData.length}`;
+            
+            // Display message based on score
+            if (score === quizData.length) {
+                messageElement.textContent = "Perfect! You're a literary analysis expert!";
+            } else if (score >= quizData.length * 0.7) {
+                messageElement.textContent = "Great job! You have a solid understanding of literary concepts.";
+            } else if (score >= quizData.length * 0.5) {
+                messageElement.textContent = "Good effort! Review the concepts and try again.";
+            } else {
+                messageElement.textContent = "Keep studying! Literature analysis takes practice.";
+            }
+            
+            // Display detailed results
+            displayDetailedResults();
+        }
+
+        // Display detailed results with correct answers and user answers
+        function displayDetailedResults() {
+            resultsDetailsElement.innerHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('result-question');
+                questionElement.textContent = `${index + 1}. ${question.question}`;
+                resultItem.appendChild(questionElement);
+                
+                const answerComparison = document.createElement('div');
+                answerComparison.classList.add('answer-comparison');
+                
+                // User's answer
+                const userAnswerDiv = document.createElement('div');
+                userAnswerDiv.classList.add('user-answer');
+                if (userAnswers[index] === question.correct) {
+                    userAnswerDiv.classList.add('correct');
+                }
+                
+                const userLabel = document.createElement('div');
+                userLabel.classList.add('answer-label');
+                userLabel.textContent = 'Your Answer';
+                userAnswerDiv.appendChild(userLabel);
+                
+                const userAnswerText = document.createElement('div');
+                userAnswerText.textContent = userAnswers[index] !== null 
+                    ? question.options[userAnswers[index]] 
+                    : 'Not answered';
+                userAnswerDiv.appendChild(userAnswerText);
+                
+                // Correct answer
+                const correctAnswerDiv = document.createElement('div');
+                correctAnswerDiv.classList.add('correct-answer');
+                
+                const correctLabel = document.createElement('div');
+                correctLabel.classList.add('answer-label');
+                correctLabel.textContent = 'Correct Answer';
+                correctAnswerDiv.appendChild(correctLabel);
+                
+                const correctAnswerText = document.createElement('div');
+                correctAnswerText.textContent = question.options[question.correct];
+                correctAnswerDiv.appendChild(correctAnswerText);
+                
+                answerComparison.appendChild(userAnswerDiv);
+                answerComparison.appendChild(correctAnswerDiv);
+                resultItem.appendChild(answerComparison);
+                
+                // Explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.marginTop = '10px';
+                explanationDiv.style.fontStyle = 'italic';
+                explanationDiv.style.color = '#555';
+                explanationDiv.textContent = question.explanation;
+                resultItem.appendChild(explanationDiv);
+                
+                resultsDetailsElement.appendChild(resultItem);
+            });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            initQuiz();
+            quizContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+        }
+
+        // Event listeners
+        prevButton.addEventListener('click', prevQuestion);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
