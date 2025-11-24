@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Little Prince Study Quiz</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>The Little Prince Study Quiz</h1>
+            <p class="subtitle">Test your understanding of themes, characters, and literary elements</p>
+        </header>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="question-count" id="question-count">Question 1 of 5</div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="results-container hidden" id="results-container">
+            <div class="prince-icon">👑</div>
+            <div class="score" id="score"></div>
+            <div class="message" id="message"></div>
+            
+            <div class="results-details" id="results-details">
+                <!-- Results will be inserted here -->
+            </div>
+            <a href="../index.html" class="back-home-btn">← Back to Home</a>
+
+            
+            <button id="restart-btn">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions based on The Little Prince study guide
+        const questionPool = [
+            {
+                question: "What is the main conflict hinted at through quotes about adults and the drawing of a hat?",
+                options: [
+                    "The conflict between children and animals",
+                    "The disconnect between childish imagination and adult practicality",
+                    "A struggle between different planetary systems",
+                    "The prince's battle with the baobabs"
+                ],
+                correct: 1,
+                explanation: "The quotes highlight how adults lack imagination and see things literally (a hat instead of a boa constrictor), representing the conflict between childhood wonder and adult practicality."
+            },
+            {
+                question: "What does the Turkish astronomer episode reveal about adults?",
+                options: [
+                    "Their interest in scientific discoveries",
+                    "Their prejudice based on appearance rather than substance",
+                    "Their understanding of asteroid classification",
+                    "Their knowledge of different cultures"
+                ],
+                correct: 1,
+                explanation: "The astronomer's findings were rejected when he wore Turkish costume but accepted when dressed elegantly, showing adults judge by appearances rather than substance."
+            },
+            {
+                question: "According to the king, what makes authority legitimate?",
+                options: [
+                    "Power and control over subjects",
+                    "Wealth and resources",
+                    "Reasonable commands that respect capabilities",
+                    "Divine right and inheritance"
+                ],
+                correct: 2,
+                explanation: "The king explains that authority rests on reason - he can only require what others can perform, and his orders must be reasonable to deserve obedience."
+            },
+            {
+                question: "What is the significance of the fox teaching about 'taming'?",
+                options: [
+                    "It shows how to domesticate wild animals",
+                    "It explains the prince's gardening skills",
+                    "It illustrates how relationships create meaning through investment",
+                    "It demonstrates hunting techniques"
+                ],
+                correct: 2,
+                explanation: "The fox explains that 'taming' means establishing ties - through time and care invested, we make others unique and meaningful to us."
+            },
+            {
+                question: "Why is the lamplighter considered less absurd than other adults?",
+                options: [
+                    "He has the most prestigious job",
+                    "He earns the highest salary",
+                    "His work has meaning and beauty",
+                    "He obeys orders without question"
+                ],
+                correct: 2,
+                explanation: "Unlike other adults obsessed with power, vanity, or possession, the lamplighter's work is beautiful and useful - he brings stars to life and puts them to sleep."
+            },
+            {
+                question: "What does the businessman counting stars represent?",
+                options: [
+                    "Scientific curiosity about the universe",
+                    "The adult tendency to quantify and possess rather than appreciate",
+                    "Astronomical research methods",
+                    "Financial investment strategies"
+                ],
+                correct: 1,
+                explanation: "The businessman represents how adults reduce beautiful things (stars) to numbers and possessions, missing their true essence and beauty."
+            },
+            {
+                question: "What is the significance of the quote 'What is essential is invisible to the eye'?",
+                options: [
+                    "Things must be touched to be understood",
+                    "True value lies in what we feel and experience, not superficial appearances",
+                    "Vision is an unreliable sense",
+                    "Important things are always hidden"
+                ],
+                correct: 1,
+                explanation: "This central theme emphasizes that love, relationships, and meaning come from emotional connections and time invested, not physical appearances or material value."
+            },
+            {
+                question: "What does the rose symbolize in the story?",
+                options: [
+                    "The beauty of nature",
+                    "Love that requires care and responsibility",
+                    "Fragility and temporary beauty",
+                    "The prince's gardening skills"
+                ],
+                correct: 1,
+                explanation: "The rose represents love that appears ordinary but becomes unique through the time, care, and responsibility invested in the relationship."
+            },
+            {
+                question: "How does the point of view affect the narrative?",
+                options: [
+                    "It's told from the rose's perspective",
+                    "An adult narrator recounts his childhood encounter with the prince",
+                    "The king narrates his planetary experiences",
+                    "It uses multiple shifting perspectives"
+                ],
+                correct: 1,
+                explanation: "The story uses a first-person narrator who recalls his childhood encounter with the little prince, allowing reflection on how the experience changed his adult perspective."
+            },
+            {
+                question: "What does the desert well symbolize?",
+                options: [
+                    "The hidden beauty and meaning in apparent emptiness",
+                    "The prince's search for water",
+                    "Geographical features of planets",
+                    "The narrator's engineering skills"
+                ],
+                correct: 0,
+                explanation: "The well represents how beauty and meaning are often hidden beneath surface appearances - what makes the desert beautiful is the hidden well, just as what gives life meaning is often invisible."
+            },
+            {
+                question: "What existentialist concept is reflected in 'You become responsible, forever, for what you have tamed'?",
+                options: [
+                    "Absurdity of existence",
+                    "Radical freedom",
+                    "Responsibility arising from relationships",
+                    "Authenticity versus bad faith"
+                ],
+                correct: 2,
+                explanation: "This reflects existentialist ideas about responsibility - our choices and relationships create obligations that define our existence and give life meaning."
+            },
+            {
+                question: "What is the metaphor of the thirst pills?",
+                options: [
+                    "Medical advancement in desert survival",
+                    "How modern society values efficiency over experience",
+                    "The prince's search for water sources",
+                    "Business marketing strategies"
+                ],
+                correct: 1,
+                explanation: "The thirst pills represent how modern society prioritizes efficiency and time-saving over meaningful experiences (like walking toward a spring), mirroring how adults miss life's essence."
+            },
+            {
+                question: "According to the switchman, why are people never satisfied?",
+                options: [
+                    "They lack sufficient resources",
+                    "They're always searching for something else elsewhere",
+                    "They don't appreciate childhood",
+                    "They follow unreasonable kings"
+                ],
+                correct: 1,
+                explanation: "The switchman observes that people are always rushing from place to place, never satisfied where they are, constantly seeking something different rather than appreciating the present."
+            },
+            {
+                question: "How does the concept of 'the invisible essence' manifest in the story?",
+                options: [
+                    "Through magical invisibility spells",
+                    "Through hidden treasure maps",
+                    "Through the meaningful but unseen aspects of relationships and beauty",
+                    "Through scientific discoveries"
+                ],
+                correct: 2,
+                explanation: "The 'invisible essence' refers to the meaningful but unseen aspects of life - the love for the rose, the friendship with the fox, the beauty of the desert because of its hidden well."
+            },
+            {
+                question: "What does the little prince learn from his journey?",
+                options: [
+                    "Astronomical facts about different planets",
+                    "How to rule a kingdom effectively",
+                    "The importance of love, responsibility, and seeing with the heart",
+                    "Business strategies for star ownership"
+                ],
+                correct: 2,
+                explanation: "Through his encounters, the prince learns that what matters most are the invisible bonds of love and responsibility, and that we must see with the heart rather than just the eyes."
+            }
+        ];
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const questionCountElement = document.getElementById('question-count');
+        const progressElement = document.getElementById('progress');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        const resultsDetailsElement = document.getElementById('results-details');
+        const restartButton = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizData = [];
+
+        // Initialize quiz
+        function initQuiz() {
+            // Randomly select 5 questions from the pool
+            quizData = getRandomQuestions(3);
+            userAnswers = new Array(quizData.length).fill(null);
+            currentQuestion = 0;
+            score = 0;
+            
+            showQuestion();
+            updateProgressBar();
+            updateNavigation();
+        }
+
+        // Get random questions from the pool
+        function getRandomQuestions(count) {
+            // Create a copy of the question pool
+            const shuffled = [...questionPool];
+            
+            // Shuffle the array using Fisher-Yates algorithm
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // Return the first 'count' questions
+            return shuffled.slice(0, count);
+        }
+
+        // Display current question
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            questionElement.textContent = question.question;
+            questionCountElement.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        // Select an option
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion();
+            updateNavigation();
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevButton.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButton.textContent = 'Finish';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressElement.style.width = `${progress}%`;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            } else {
+                showResults();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].correct) {
+                    score++;
+                }
+            }
+            
+            // Display results
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            scoreElement.textContent = `${score} / ${quizData.length}`;
+            
+            // Display message based on score
+            if (score === quizData.length) {
+                messageElement.textContent = "Perfect! You truly understand The Little Prince's wisdom!";
+            } else if (score >= quizData.length * 0.7) {
+                messageElement.textContent = "Great job! You have a deep understanding of the book's themes.";
+            } else if (score >= quizData.length * 0.5) {
+                messageElement.textContent = "Good effort! Review the study guide and try again.";
+            } else {
+                messageElement.textContent = "Keep studying! The Little Prince has much to teach us.";
+            }
+            
+            // Display detailed results
+            displayDetailedResults();
+        }
+
+        // Display detailed results with correct answers and user answers
+        function displayDetailedResults() {
+            resultsDetailsElement.innerHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('result-question');
+                questionElement.textContent = `${index + 1}. ${question.question}`;
+                resultItem.appendChild(questionElement);
+                
+                const answerComparison = document.createElement('div');
+                answerComparison.classList.add('answer-comparison');
+                
+                // User's answer
+                const userAnswerDiv = document.createElement('div');
+                userAnswerDiv.classList.add('user-answer');
+                if (userAnswers[index] === question.correct) {
+                    userAnswerDiv.classList.add('correct');
+                }
+                
+                const userLabel = document.createElement('div');
+                userLabel.classList.add('answer-label');
+                userLabel.textContent = 'Your Answer';
+                userAnswerDiv.appendChild(userLabel);
+                
+                const userAnswerText = document.createElement('div');
+                userAnswerText.textContent = userAnswers[index] !== null 
+                    ? question.options[userAnswers[index]] 
+                    : 'Not answered';
+                userAnswerDiv.appendChild(userAnswerText);
+                
+                // Correct answer
+                const correctAnswerDiv = document.createElement('div');
+                correctAnswerDiv.classList.add('correct-answer');
+                
+                const correctLabel = document.createElement('div');
+                correctLabel.classList.add('answer-label');
+                correctLabel.textContent = 'Correct Answer';
+                correctAnswerDiv.appendChild(correctLabel);
+                
+                const correctAnswerText = document.createElement('div');
+                correctAnswerText.textContent = question.options[question.correct];
+                correctAnswerDiv.appendChild(correctAnswerText);
+                
+                answerComparison.appendChild(userAnswerDiv);
+                answerComparison.appendChild(correctAnswerDiv);
+                resultItem.appendChild(answerComparison);
+                
+                // Explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.marginTop = '10px';
+                explanationDiv.style.fontStyle = 'italic';
+                explanationDiv.style.color = '#555';
+                explanationDiv.textContent = question.explanation;
+                resultItem.appendChild(explanationDiv);
+                
+                resultsDetailsElement.appendChild(resultItem);
+            });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            initQuiz();
+            quizContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+        }
+
+        // Event listeners
+        prevButton.addEventListener('click', prevQuestion);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>

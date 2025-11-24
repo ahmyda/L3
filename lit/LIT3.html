@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Analysis Quiz</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Literary Analysis Quiz</h1>
+            <p class="subtitle">Test your knowledge of plot, characters, point of view, and more</p>
+        </header>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="question-count" id="question-count">Question 1 of 5</div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="results-container hidden" id="results-container">
+            <div class="book-icon">📚</div>
+            <div class="score" id="score"></div>
+            <div class="message" id="message"></div>
+            
+            <div class="results-details" id="results-details">
+                <!-- Results will be inserted here -->
+            </div>
+            <a href="../index.html" class="back-home-btn">← Back to Home</a>
+
+            
+            <button id="restart-btn">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Full pool of questions and answers
+   const questionPool = [
+    {
+        question: "What is the primary purpose of a 'hook' in an essay introduction?",
+        options: [
+            "To state the thesis clearly",
+            "To provide background information",
+            "To capture readers' attention and raise interest",
+            "To summarize the main arguments"
+        ],
+        correct: 2,
+        explanation: "A hook is the opening sentence(s) designed to capture readers' attention and raise their interest in the topic before introducing the thesis statement."
+    },
+    {
+        question: "Which of the following is NOT mentioned as an effective type of hook?",
+        options: [
+            "A surprising statistic",
+            "A personal anecdote",
+            "A dictionary definition",
+            "A relevant quote"
+        ],
+        correct: 2,
+        explanation: "The guide mentions questions, quotes, anecdotes, fun facts, statistics, and jokes as effective hooks, but not dictionary definitions."
+    },
+    {
+        question: "What is the role of general statements in the introduction?",
+        options: [
+            "To provide specific evidence for the thesis",
+            "To describe the topic and link the hook to the thesis",
+            "To conclude the essay's main points",
+            "To present counterarguments"
+        ],
+        correct: 1,
+        explanation: "General statements provide background information about the topic and create a smooth transition from the hook to the thesis statement."
+    },
+    {
+        question: "What characterizes an effective thesis statement?",
+        options: [
+            "It should be as general as possible to cover many topics",
+            "It should be extremely specific with detailed evidence",
+            "It should be clear, concise, and present the writer's position",
+            "It should pose multiple questions for the reader to consider"
+        ],
+        correct: 2,
+        explanation: "An effective thesis statement is clear, concise, precise, presents the topic and the writer's position, and controls the ideas to be discussed in the body paragraphs."
+    },
+    {
+        question: "How should body paragraphs be organized in relation to the thesis statement?",
+        options: [
+            "Each paragraph should introduce completely new topics",
+            "Paragraphs should follow the order of ideas mentioned in the thesis",
+            "Body paragraphs should randomly discuss various points",
+            "Only one body paragraph should relate to the thesis"
+        ],
+        correct: 1,
+        explanation: "Body paragraphs should follow the pattern of organization indicated in the thesis statement's controlling idea, with each paragraph developing one main point mentioned in the thesis."
+    },
+    {
+        question: "What is the function of a topic sentence in a body paragraph?",
+        options: [
+            "To restate the thesis statement",
+            "To introduce a completely new argument",
+            "To relate to one idea mentioned in the thesis statement",
+            "To provide the essay's conclusion"
+        ],
+        correct: 2,
+        explanation: "Topic sentences in body paragraphs should each relate to one of the ideas mentioned in the thesis statement, creating coherence throughout the essay."
+    },
+    {
+        question: "Which of these is an appropriate strategy for writing effective conclusions?",
+        options: [
+            "Introducing brand new arguments and evidence",
+            "Restating the thesis and summarizing main ideas",
+            "Posing entirely new research questions",
+            "Providing extensive new examples"
+        ],
+        correct: 1,
+        explanation: "Appropriate conclusion strategies include restating the thesis, summarizing main ideas, connecting back to the introduction hook, and providing final thoughts - but never introducing new arguments."
+    },
+    {
+        question: "In the 'Things Fall Apart' sample essay, what type of evidence does the writer use to support the analysis?",
+        options: [
+            "Only personal opinions",
+            "Only quotes from the novel",
+            "Quotes from the novel and citations from literary critics",
+            "Only statistical data"
+        ],
+        correct: 2,
+        explanation: "The essay uses both direct quotes from the novel and citations from literary critics like Diana Akers Rhoads to support the analysis of Igbo culture."
+    },
+    {
+        question: "According to the 'Language Restriction in The Giver' essay, what is the main method of control used by the Committee of Elders?",
+        options: [
+            "Physical punishment only",
+            "Control over language and discourse",
+            "Economic restrictions",
+            "Military enforcement"
+        ],
+        correct: 1,
+        explanation: "The essay argues that the most devastating form of control in 'The Giver' is exerted through language manipulation, including euphemisms and enforced precision of language."
+    },
+    {
+        question: "What literary technique does Dickens primarily use in 'Hard Times' to emphasize his social criticism?",
+        options: [
+            "Stream of consciousness",
+            "Symbolism, satire, and synecdoche",
+            "Epistolary form",
+            "Magical realism"
+        ],
+        correct: 1,
+        explanation: "The sample essay highlights Dickens' use of symbolism (farming cycle), satire (religion of fact), and synecdoche (workers as 'the hands') to emphasize his social criticism."
+    },
+    {
+        question: "In the Tolkien essay, what theme is highlighted through the contrast between the Elven Rings and the One Ring?",
+        options: [
+            "The importance of wealth",
+            "Good versus evil",
+            "Political power struggles",
+            "Environmental conservation"
+        ],
+        correct: 1,
+        explanation: "The essay discusses how the Elven Rings symbolize goodness and creation, while the One Ring represents pure evil and destruction, highlighting the theme of good versus evil."
+    },
+    {
+        question: "What is the purpose of using 'in-text citations' in literary analysis essays?",
+        options: [
+            "To make the essay longer",
+            "To show the writer's reading comprehension",
+            "To support analysis with expert opinions and criticism",
+            "To confuse the reader with multiple sources"
+        ],
+        correct: 2,
+        explanation: "In-text citations from literary critics and analysts provide authoritative support for the writer's interpretation and strengthen the analytical argument."
+    },
+    {
+        question: "How does the 'Things Fall Apart' essay demonstrate Achebe's balanced portrayal of Igbo culture?",
+        options: [
+            "By only showing positive aspects",
+            "By only criticizing negative aspects",
+            "By showing both strengths and weaknesses",
+            "By comparing it to European cultures exclusively"
+        ],
+        correct: 2,
+        explanation: "The essay shows how Achebe presents both positive aspects (democratic systems, justice, tolerance) and negative aspects (treatment of women) of Igbo culture without romanticizing or sentimentalizing."
+    },
+    {
+        question: "What is the role of 'elaboration' in body paragraphs?",
+        options: [
+            "To repeat the topic sentence",
+            "To provide commentary, explanations, examples, and illustrations",
+            "To introduce new topics",
+            "To conclude the paragraph"
+        ],
+        correct: 1,
+        explanation: "Elaboration includes commentary, explanations, events, examples, and illustrations that develop and support the main idea of the paragraph."
+    },
+    {
+        question: "In the 'Lord of the Rings' essay, how is Bilbo's character connected to Christian symbolism?",
+        options: [
+            "Through his temptation resistance similar to Jesus in the desert",
+            "Through his miraculous healing powers",
+            "Through his role as a prophet",
+            "Through his resurrection from death"
+        ],
+        correct: 0,
+        explanation: "The essay connects Bilbo's resistance to the Ring's temptation to Jesus resisting Satan's temptations in the desert, showing Christian symbolism in his character."
+    },
+    {
+        question: "What is the main argument about language in 'The Giver' essay?",
+        options: [
+            "Language should be completely free and unrestricted",
+            "Control over language leads to control over thought and society",
+            "Precision of language is always beneficial",
+            "Euphemisms improve communication"
+        ],
+        correct: 1,
+        explanation: "The essay argues that by controlling language through euphemisms and enforced precision, the Committee of Elders gains control over people's thoughts, knowledge, and ultimately the entire society."
+    },
+    {
+        question: "How should transitions be used in an essay?",
+        options: [
+            "Only at the beginning of the essay",
+            "Randomly throughout the text",
+            "Within paragraphs and between paragraphs to maintain flow",
+            "Only in the conclusion"
+        ],
+        correct: 2,
+        explanation: "Effective use of transition words both within paragraphs and when moving between paragraphs helps maintain coherence and logical flow throughout the essay."
+    },
+    {
+        question: "What does the 'Hard Times' essay identify as the consequence of sowing only 'seeds of Fact'?",
+        options: [
+            "Universal happiness and prosperity",
+            "Improved industrial output",
+            "Ruined marriages, deaths, and personal undoing",
+            "Better educational systems"
+        ],
+        correct: 2,
+        explanation: "The essay shows that planting only 'seeds of Fact' leads to negative consequences like Louisa's ruined marriage, Stephen's death, and Tom's undoing."
+    },
+    {
+        question: "According to the writing guide, what should you avoid in a conclusion?",
+        options: [
+            "Restating the thesis",
+            "Summarizing main points",
+            "Introducing new ideas or arguments",
+            "Connecting back to the introduction"
+        ],
+        correct: 2,
+        explanation: "Conclusions should never introduce new, irrelevant ideas or arguments that haven't been discussed in the body of the essay."
+    },
+    {
+        question: "What is the purpose of using quotes from the literary text in an analysis essay?",
+        options: [
+            "To increase the word count",
+            "To provide concrete textual evidence for analysis",
+            "To show off reading comprehension",
+            "To replace the writer's own analysis"
+        ],
+        correct: 1,
+        explanation: "Quotes from the text serve as concrete evidence that supports the writer's analysis and interpretation, making the argument more persuasive and grounded in the text."
+    }
+];
+
+
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const questionCountElement = document.getElementById('question-count');
+        const progressElement = document.getElementById('progress');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        const resultsDetailsElement = document.getElementById('results-details');
+        const restartButton = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizData = [];
+
+        // Initialize quiz
+        function initQuiz() {
+            // Randomly select 5 questions from the pool
+            quizData = getRandomQuestions(3);
+            userAnswers = new Array(quizData.length).fill(null);
+            currentQuestion = 0;
+            score = 0;
+            
+            showQuestion();
+            updateProgressBar();
+            updateNavigation();
+        }
+
+        // Get random questions from the pool
+        function getRandomQuestions(count) {
+            // Create a copy of the question pool
+            const shuffled = [...questionPool];
+            
+            // Shuffle the array using Fisher-Yates algorithm
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // Return the first 'count' questions
+            return shuffled.slice(0, count);
+        }
+
+        // Display current question
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            questionElement.textContent = question.question;
+            questionCountElement.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        // Select an option
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion();
+            updateNavigation();
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevButton.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButton.textContent = 'Finish';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressElement.style.width = `${progress}%`;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            } else {
+                showResults();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgressBar();
+                updateNavigation();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].correct) {
+                    score++;
+                }
+            }
+            
+            // Display results
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            scoreElement.textContent = `${score} / ${quizData.length}`;
+            
+            // Display message based on score
+            if (score === quizData.length) {
+                messageElement.textContent = "Perfect! You're a literary analysis expert!";
+            } else if (score >= quizData.length * 0.7) {
+                messageElement.textContent = "Great job! You have a solid understanding of literary concepts.";
+            } else if (score >= quizData.length * 0.5) {
+                messageElement.textContent = "Good effort! Review the concepts and try again.";
+            } else {
+                messageElement.textContent = "Keep studying! Literature analysis takes practice.";
+            }
+            
+            // Display detailed results
+            displayDetailedResults();
+        }
+
+        // Display detailed results with correct answers and user answers
+        function displayDetailedResults() {
+            resultsDetailsElement.innerHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('result-question');
+                questionElement.textContent = `${index + 1}. ${question.question}`;
+                resultItem.appendChild(questionElement);
+                
+                const answerComparison = document.createElement('div');
+                answerComparison.classList.add('answer-comparison');
+                
+                // User's answer
+                const userAnswerDiv = document.createElement('div');
+                userAnswerDiv.classList.add('user-answer');
+                if (userAnswers[index] === question.correct) {
+                    userAnswerDiv.classList.add('correct');
+                }
+                
+                const userLabel = document.createElement('div');
+                userLabel.classList.add('answer-label');
+                userLabel.textContent = 'Your Answer';
+                userAnswerDiv.appendChild(userLabel);
+                
+                const userAnswerText = document.createElement('div');
+                userAnswerText.textContent = userAnswers[index] !== null 
+                    ? question.options[userAnswers[index]] 
+                    : 'Not answered';
+                userAnswerDiv.appendChild(userAnswerText);
+                
+                // Correct answer
+                const correctAnswerDiv = document.createElement('div');
+                correctAnswerDiv.classList.add('correct-answer');
+                
+                const correctLabel = document.createElement('div');
+                correctLabel.classList.add('answer-label');
+                correctLabel.textContent = 'Correct Answer';
+                correctAnswerDiv.appendChild(correctLabel);
+                
+                const correctAnswerText = document.createElement('div');
+                correctAnswerText.textContent = question.options[question.correct];
+                correctAnswerDiv.appendChild(correctAnswerText);
+                
+                answerComparison.appendChild(userAnswerDiv);
+                answerComparison.appendChild(correctAnswerDiv);
+                resultItem.appendChild(answerComparison);
+                
+                // Explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.marginTop = '10px';
+                explanationDiv.style.fontStyle = 'italic';
+                explanationDiv.style.color = '#555';
+                explanationDiv.textContent = question.explanation;
+                resultItem.appendChild(explanationDiv);
+                
+                resultsDetailsElement.appendChild(resultItem);
+            });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            initQuiz();
+            quizContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+        }
+
+        // Event listeners
+        prevButton.addEventListener('click', prevQuestion);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
