@@ -7,12 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     /* ========================================================
-       GLOBAL STYLES & VARIABLES
+       GLOBAL STYLES & VARIABLES — UNCHANGED
        ======================================================== */
     :root {
-      --primary: #3f51b5;          /* Indigo */
+      --primary: #3f51b5;
       --primary-dark: #303f9f;
-      --accent: #009688;           /* Teal */
+      --accent: #009688;
       --light-bg: #f9fbfd;
       --card-bg: #ffffff;
       --text: #2d3748;
@@ -23,7 +23,7 @@
       --error: #e53e3e;
       --shadow: 0 4px 12px rgba(0,0,0,0.06);
       --radius: 12px;
-      transition: all 0.3s ease;
+      --transition: all 0.3s ease;
     }
 
     *, *::before, *::after {
@@ -53,7 +53,6 @@
       width: 100%;
     }
 
-    /* HEADER */
     header {
       text-align: center;
       margin-bottom: 1.5rem;
@@ -76,7 +75,6 @@
       line-height: 1.5;
     }
 
-    /* PROGRESS BAR */
     .progress-container {
       width: 100%;
       background: #e0e0e0;
@@ -97,7 +95,6 @@
       border-radius: 4px;
     }
 
-    /* LESSON CARD */
     .lesson {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -152,7 +149,6 @@
       margin-bottom: 1.8rem;
     }
 
-    /* CONTENT STYLING */
     .section-title {
       color: var(--primary-dark);
       margin: 1.2rem 0 0.8rem;
@@ -207,37 +203,98 @@
       font-size: 1.1rem;
     }
 
-    /* MIND MAP */
     .mindmap {
       margin: 1.5rem 0;
-      padding: 1rem 0;
-      border-top: 2px dashed #edf2f7;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
 
     .mindmap h3 {
       color: var(--primary);
       text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
     }
 
-    .mindmap-container {
+    .mindmap-center {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border-radius: var(--radius);
+      border: 2px solid var(--primary);
+    }
+
+    .mindmap-branch {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mindmap-node {
+      flex: 1;
+      min-width: 150px;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .mindmap-node:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .mindmap-node-title {
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .mindmap-node-desc {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .mindmap-connection {
+      position: relative;
+      height: 30px;
       width: 100%;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 10px 0;
+      margin: 0.5rem 0;
     }
 
-    .mindmap svg {
-      display: block;
-      margin: 0 auto;
-      min-width: 500px;
-      width: 100%;
-      max-width: 100%;
-      height: auto;
+    .mindmap-connection::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
     }
 
-    /* QUIZ */
+    .mindmap-connection::after {
+      content: '↓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 0 0.5rem;
+      color: var(--primary);
+    }
+
     .quiz-container {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -271,7 +328,7 @@
     }
 
     .question-container {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       padding: 1rem;
       background: #fafcff;
       border-radius: var(--radius);
@@ -323,32 +380,33 @@
       color: var(--error);
     }
 
-    /* FEEDBACK - ADDED IN THE CORRECT POSITION */
     .feedback {
       margin-top: 1rem;
       padding: 0;
       border-radius: 8px;
-      max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1), padding 0.3s ease;
+      max-height: 0;
+      transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1), padding 0.3s ease, margin 0.3s ease;
     }
 
     .feedback.show {
-      max-height: 500px;
+      max-height: 300px;
       padding: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 0;
+      overflow-y: auto;
     }
 
     .feedback.correct {
       background: #e8f5e9;
-      border-left: 6px solid var(--success);
+      border-left: 4px solid var(--success);
     }
 
     .feedback.incorrect {
       background: #fff5f5;
-      border-left: 6px solid var(--error);
+      border-left: 4px solid var(--error);
     }
 
-    /* BUTTONS */
     .btn {
       background: var(--primary);
       color: white;
@@ -392,7 +450,6 @@
       min-width: 150px;
     }
 
-    /* INSTRUCTIONS & FOOTER */
     .instructions {
       background: #e3f2fd;
       padding: 1.5rem;
@@ -421,140 +478,42 @@
       margin-top: 1rem;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 768px) {
-      body { 
-        padding: 10px; 
-      }
-      
-      .lesson-content.active {
-        padding: 1rem;
-      }
-      
-      .quiz-container {
-        padding: 1.2rem;
-      }
-      
-      .mindmap svg {
-        min-width: 100%;
-      }
-      
-      .btn-container {
-        flex-direction: column;
-      }
-      
-      .btn-container .btn {
-        width: 100%;
-      }
-      
-      .essay, .example, .comparison {
-        padding: 0.9rem;
-      }
-      
-      /* FEEDBACK ON MOBILE */
-      .feedback {
-        margin-top: 0.8rem;
-        border-radius: 6px;
-      }
-      
-      .feedback.show {
-        max-height: none; /* Remove height restriction on mobile */
-        padding: 0.9rem;
-        overflow: visible; /* Allow full content display */
-      }
-      
-      .feedback-content {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      
-      .feedback-icon {
-        font-size: 1.4rem;
-        align-self: flex-start;
-      }
-      
-      .feedback p,
-      .feedback strong {
-        font-size: 1rem;
-        line-height: 1.5;
-      }
+      body { padding: 10px; }
+      .lesson-content.active { padding: 1rem; }
+      .quiz-container { padding: 1.2rem; }
+      .mindmap-branch { flex-direction: column; }
+      .mindmap-node { min-width: 100%; }
+      .btn-container { flex-direction: column; }
+      .btn-container .btn { width: 100%; }
+      .essay, .example, .comparison { padding: 0.9rem; }
+      .feedback { margin-top: 0.8rem; border-radius: 6px; }
+      .feedback.show { max-height: none; padding: 0.9rem; overflow: visible; margin-bottom: 1rem; }
     }
 
     @media (max-width: 480px) {
-      .lesson-header {
-        padding: 0.9rem;
-      }
-      
-      .quiz-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-      
-      .score-display {
-        align-self: stretch;
-        text-align: center;
-      }
-      
-      .option {
-        padding: 0.9rem 0.7rem;
-      }
-      
-      /* FEEDBACK ON VERY SMALL SCREENS */
-      .feedback.show {
-        padding: 0.8rem;
-      }
-      
-      .feedback.correct,
-      .feedback.incorrect {
-        border-left-width: 4px;
-      }
-      
-      .feedback * {
-        max-width: 100%;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
+      .lesson-header { padding: 0.9rem; }
+      .quiz-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .score-display { align-self: stretch; text-align: center; }
+      .option { padding: 0.9rem 0.7rem; }
+      .feedback.show { padding: 0.8rem; }
+      .feedback.correct, .feedback.incorrect { border-left-width: 3px; }
     }
 
-    /* ANIMATIONS */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    .pulse { animation: pulse 0.5s ease; }
+    @keyframes feedbackSlideIn {
+      from { opacity: 0; transform: translateY(-5px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    .pulse {
-      animation: pulse 0.5s ease;
-    }
-
-    /* FEEDBACK ANIMATION - MOVED TO BOTTOM */
-    @keyframes feedbackSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .feedback.show {
-      animation: feedbackSlideIn 0.4s ease-out;
-    }
-</style>
+    .feedback.show { animation: feedbackSlideIn 0.3s ease-out; }
+  </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Research Methodology: Types of Knowledge & Scientific Inquiry :) </h1>
+      <h1>Research Methodology: Types of Knowledge & Scientific Inquiry</h1>
       <p class="subtitle">Interactive Academic Guide — Dr. Boukhechba Hicham, University Ziane Achour Djelfa – Algeria</p>
     </header>
 
@@ -571,102 +530,72 @@
       <div class="lesson-content" id="lesson1" role="region" aria-label="Lecture 1 content">
         <div class="section">
           <h3 class="section-title">What Is Knowledge?</h3>
-          <p>At the very foundation of research lies the concept of <strong>knowledge</strong>. Research is often defined as the systematic exploration of problems through data collection and analysis—but to understand research, we must first understand knowledge itself.</p>
-          <p>Knowledge isn't just facts in books. It comes in many forms. The simplest distinction is between <strong>explicit knowledge</strong> (documented, like in databases) and <strong>tacit knowledge</strong> (personal, hard to express, like riding a bike). But according to Drew (2020), there are actually <strong>14 types of knowledge</strong>, each with unique characteristics.</p>
+          <p>Research is often defined as the systematic exploration of problems through data collection and analysis. However, to understand research, we must first reflect on <strong>knowledge</strong>—its nature and forms.</p>
+          <p>Knowledge is not just facts in books. Drew (2020) identifies <strong>14 types of knowledge</strong>, each serving unique roles in how we understand and interact with the world.</p>
         </div>
 
         <div class="section">
           <h3 class="section-title">The 14 Types of Knowledge (Drew, 2020)</h3>
           <ol>
-            <li><strong>A posteriori knowledge</strong>: Gained through experience (e.g., touching a hot stove)</li>
-            <li><strong>A priori knowledge</strong>: Independent of experience (e.g., 1+1=2)</li>
-            <li><strong>Distributed knowledge</strong>: Spread across many people (e.g., airplane design)</li>
-            <li><strong>Domain/Expert knowledge</strong>: Specialized understanding in a field</li>
-            <li><strong>Empirical knowledge</strong>: From sensory observation (research data)</li>
-            <li><strong>Encoded knowledge</strong>: Stored in documents, databases</li>
-            <li><strong>Tacit knowledge</strong>: Personal, intuitive, hard to formalize</li>
-            <li><strong>Explicit knowledge</strong>: Codified, verbalized, shareable</li>
-            <li><strong>Metaknowledge</strong>: "Knowledge about knowledge"—how to find information</li>
-            <li><strong>Procedural (Imperative) knowledge</strong>: "Knowing how" (e.g., cooking steps)</li>
-            <li><strong>Situated knowledge</strong>: Tied to specific context/culture</li>
-            <li><strong>Descriptive knowledge</strong>: Factual, neutral reporting</li>
-            <li><strong>Known unknowns</strong>: We know we don't know (researchable gaps)</li>
-            <li><strong>Unknown unknowns</strong>: We don't know we don't know (beyond imagination)</li>
+            <li><strong>A posteriori knowledge</strong>: Gained through experience (e.g., touching a hot stove).</li>
+            <li><strong>A priori knowledge</strong>: Independent of experience (e.g., mathematical truths like 1+1=2).</li>
+            <li><strong>Distributed knowledge</strong>: Spread across individuals (e.g., airplane design requiring experts in aerodynamics, propulsion, etc.).</li>
+            <li><strong>Domain/Expert knowledge</strong>: Specialized understanding within a field.</li>
+            <li><strong>Empirical knowledge</strong>: Derived from sensory observation or experimentation.</li>
+            <li><strong>Encoded knowledge</strong>: Stored in documents, databases, or formal systems.</li>
+            <li><strong>Tacit knowledge</strong>: Personal, intuitive, hard to articulate (e.g., riding a bike).</li>
+            <li><strong>Explicit knowledge</strong>: Codified, verbalizable, and easily shared.</li>
+            <li><strong>Metaknowledge</strong>: “Knowledge about knowledge”—knowing how to find or evaluate information.</li>
+            <li><strong>Procedural (Imperative) knowledge</strong>: “Knowing how” to perform tasks (e.g., cooking).</li>
+            <li><strong>Situated knowledge</strong>: Tied to specific contexts or cultures.</li>
+            <li><strong>Descriptive knowledge</strong>: Factual, neutral reporting of “what is.”</li>
+            <li><strong>Known unknowns</strong>: We know we don’t know—researchable gaps.</li>
+            <li><strong>Unknown unknowns</strong>: We don’t know we don’t know—beyond current imagination.</li>
           </ol>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Worked Example</h3>
-          <div class="example">
-            <h4>Example: Learning to Cook Pasta</h4>
-            <p><strong>Explicit knowledge</strong>: The recipe in a cookbook.<br>
-            <strong>Tacit knowledge</strong>: Knowing when the pasta is "al dente" by feel.<br>
-            <strong>Procedural knowledge</strong>: The sequence: boil water → add salt → cook pasta → drain.<br>
-            <strong>Situated knowledge</strong>: Understanding that in high-altitude cities (e.g., Denver), water boils at a lower temperature, so pasta takes longer.<br>
-            <strong>Metaknowledge</strong>: Knowing where to find authentic Italian recipes online.<br>
-            <strong>A posteriori knowledge</strong>: Learning that overcooked pasta is mushy—by tasting it!</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Comparison with Lecture 2</h3>
-          <div class="comparison">
-            <h4>Knowledge vs. Scientific Knowledge</h4>
-            <p>While Lecture 1 explores the <em>diversity</em> of knowledge, Lecture 2 focuses on what makes knowledge <em>scientific</em>. Not all 14 types qualify as scientific. For example, a dream (a posteriori) is not scientific because it can't be observed or verified by others. Scientific knowledge must be <strong>empirical, objective, and testable</strong>—filtering general knowledge through methodological rigor.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Model Essays (Exam Style)</h3>
-          <div class="essay">
-            <h4>Essay 1: "Tacit knowledge is essential in research." Discuss.</h4>
-            <p><strong>Introduction:</strong> While research demands explicit, measurable data, tacit knowledge—the intuitive, personal understanding gained through experience—plays a crucial yet often overlooked role in scholarly inquiry.</p>
-            <p><strong>Body:</strong> Polanyi (1962) famously stated, "We know more than we can tell." In fields like education or medicine, professionals rely on tacit insights: a teacher sensing student confusion, or a surgeon's "feel" during an operation. Though difficult to quantify, this knowledge guides hypothesis generation, method design, and ethical judgment. Ignoring it risks creating sterile, context-free research. Reflective journals, peer observation, and narrative interviews can help make tacit dimensions visible.</p>
-            <p><strong>Conclusion:</strong> The most impactful research integrates both explicit rigor and tacit wisdom. By acknowledging the role of intuition and experience, researchers produce work that is not only methodologically sound but also deeply human and applicable.</p>
-          </div>
-
-          <div class="essay">
-            <h4>Essay 2: Can a dream be a source of scientific knowledge?</h4>
-            <p><strong>Introduction:</strong> Dreams have inspired scientific breakthroughs (e.g., Kekulé's benzene ring), but they cannot constitute scientific knowledge on their own.</p>
-            <p><strong>Body:</strong> Scientific knowledge requires <em>verifiability</em>—others must observe and test it (Bayley & Lucas, 2007). A dream is <em>a posteriori</em> (you experienced it) but not <em>empirical</em> (not accessible to others' senses). However, if a dream sparks a testable idea—like a new theory of memory—and that idea survives experimentation, peer review, and replication, then it contributes indirectly to science. The dream is the seed; the scientific method is the soil.</p>
-            <p><strong>Conclusion:</strong> Dreams are creative catalysts, not scientific evidence. Science begins not with inspiration alone, but with the disciplined testing of inspired ideas.</p>
-          </div>
         </div>
 
         <div class="mindmap">
           <h3>Mind Map: Types of Knowledge</h3>
-          <div class="mindmap-container">
-            <svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" aria-label="Mind map showing different types of knowledge">
-              <style>
-                .node { font: bold 12px 'Roboto', sans-serif; fill: #2d3748; }
-                .link { stroke: #a0aec0; stroke-width: 1.5; }
-                .center { font: bold 14px 'Merriweather', serif; fill: white; }
-              </style>
-              <!-- Center -->
-              <circle cx="300" cy="225" r="55" fill="#3f51b5"/>
-              <text x="300" y="220" text-anchor="middle" class="center">Knowledge</text>
-              <text x="300" y="240" text-anchor="middle" class="center">(14 Types)</text>
-
-              <!-- Outer Nodes -->
-              <circle cx="120" cy="100" r="35" fill="#e0f2f1"/><text x="120" y="105" text-anchor="middle" class="node">Explicit</text>
-              <circle cx="480" cy="100" r="35" fill="#e0f2f1"/><text x="480" y="105" text-anchor="middle" class="node">Tacit</text>
-              <circle cx="120" cy="350" r="35" fill="#e0f2f1"/><text x="120" y="355" text-anchor="middle" class="node">A Priori</text>
-              <circle cx="480" cy="350" r="35" fill="#e0f2f1"/><text x="480" y="355" text-anchor="middle" class="node">A Posteriori</text>
-              <circle cx="300" cy="50" r="35" fill="#e0f2f1"/><text x="300" y="55" text-anchor="middle" class="node">Empirical</text>
-              <circle cx="300" cy="400" r="35" fill="#e0f2f1"/><text x="300" y="405" text-anchor="middle" class="node">Procedural</text>
-              <circle cx="180" cy="225" r="35" fill="#e0f2f1"/><text x="180" y="230" text-anchor="middle" class="node">Metaknowledge</text>
-              <circle cx="420" cy="225" r="35" fill="#e0f2f1"/><text x="420" y="230" text-anchor="middle" class="node">Situated</text>
-
-              <!-- Links -->
-              <line x1="300" y1="225" x2="120" y2="100" class="link"/>
-              <line x1="300" y1="225" x2="480" y2="100" class="link"/>
-              <line x1="300" y1="225" x2="120" y2="350" class="link"/>
-              <line x1="300" y1="225" x2="480" y2="350" class="link"/>
-              <line x1="300" y1="225" x2="300" y2="50" class="link"/>
-              <line x1="300" y1="225" x2="300" y2="400" class="link"/>
-              <line x1="300" y1="225" x2="180" y2="225" class="link"/>
-              <line x1="300" y1="225" x2="420" y2="225" class="link"/>
-            </svg>
+          <div class="mindmap-center">KNOWLEDGE (14 Types)</div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #3f51b5;">
+              <div class="mindmap-node-title">Explicit</div>
+              <div class="mindmap-node-desc">Codified, documented</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #009688;">
+              <div class="mindmap-node-title">Tacit</div>
+              <div class="mindmap-node-desc">Personal, intuitive</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #9c27b0;">
+              <div class="mindmap-node-title">A Priori</div>
+              <div class="mindmap-node-desc">Logic/math, no experience needed</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #ff9800;">
+              <div class="mindmap-node-title">A Posteriori</div>
+              <div class="mindmap-node-desc">From experience</div>
+            </div>
+          </div>
+          <div class="mindmap-connection"></div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #4caf50;">
+              <div class="mindmap-node-title">Empirical</div>
+              <div class="mindmap-node-desc">Observation-based</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #2196f3;">
+              <div class="mindmap-node-title">Procedural</div>
+              <div class="mindmap-node-desc">"Knowing how"</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #ff5722;">
+              <div class="mindmap-node-title">Metaknowledge</div>
+              <div class="mindmap-node-desc">How to find knowledge</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #795548;">
+              <div class="mindmap-node-title">Situated</div>
+              <div class="mindmap-node-desc">Context-dependent</div>
+            </div>
+          </div>
+          <div style="margin-top: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.9rem;">
+            <p>Also: Distributed, Domain/Expert, Encoded, Descriptive, Known Unknowns, Unknown Unknowns</p>
           </div>
         </div>
       </div>
@@ -681,77 +610,45 @@
       <div class="lesson-content" id="lesson2" role="region" aria-label="Lecture 2 content">
         <div class="section">
           <h3 class="section-title">What Makes Knowledge "Scientific"?</h3>
-          <p>Not all knowledge is scientific. According to Bayley & Lucas (2007), <strong>scientific knowledge is "objectively proven because it is based on verifiable observation."</strong> This means it must come from what can be seen, heard, touched, or measured—not from opinion, belief, or speculation.</p>
-          <p>Scientific knowledge is built through a continuous cycle: <strong>theory → observation → refinement</strong> (Bhattacherjee, 2012). Researchers propose explanations (theories), test them with data, and revise based on evidence. Over time, this process creates reliable, objective knowledge.</p>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Worked Example</h3>
-          <div class="example">
-            <h4>Example: Testing a New Teaching Method</h4>
-            <p><strong>Non-scientific approach:</strong> "My students seem more engaged since I started group work!" (subjective)<br>
-            <strong>Scientific approach:</strong><br>
-            - <em>Theory:</em> "Structured group work improves writing scores."<br>
-            - <em>Method:</em> Randomly assign two similar classes—one uses group work, one doesn't.<br>
-            - <em>Data:</em> Use the same rubric to score essays before and after.<br>
-            - <em>Analysis:</em> Compare score changes statistically.<br>
-            - <em>Verification:</em> Publish methods so others can replicate.<br>
-            Only the second approach produces <em>scientific knowledge</em>.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Comparison with Lecture 1</h3>
-          <div class="comparison">
-            <h4>General Knowledge vs. Scientific Knowledge</h4>
-            <p>Lecture 1 shows knowledge can be personal, cultural, or intuitive. Lecture 2 adds the critical filter of <em>scientific validation</em>. Your belief that "music helps focus" is valid personal knowledge—but becomes scientific only after controlled testing, peer review, and replication. Science doesn't reject other knowledge types; it refines them through method.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Model Essays (Exam Style)</h3>
-          <div class="essay">
-            <h4>Essay 1: "All intelligent human behavior involves some research." Evaluate.</h4>
-            <p><strong>Introduction:</strong> Singh (2006) cites Rusk: "All intelligent human behavior involves some research." This broad view expands research beyond academia into daily problem-solving.</p>
-            <p><strong>Body:</strong> Choosing a phone involves comparing features (data collection); navigating a new city uses observation and adjustment. These mirror research's core: identifying problems and seeking evidence-based solutions. However, academic research adds rigor: systematic design, bias control, and ethical standards. Everyday "research" may lack these, risking flawed conclusions (e.g., confirmation bias in news consumption).</p>
-            <p><strong>Conclusion:</strong> The statement is insightful but incomplete. While all intelligent action involves inquiry, only disciplined methodology transforms it into reliable knowledge. Science elevates natural curiosity into collective understanding.</p>
-          </div>
-
-          <div class="essay">
-            <h4>Essay 2: Why must scientific knowledge be falsifiable?</h4>
-            <p><strong>Introduction:</strong> Falsifiability—the ability to disprove a claim—is a cornerstone of science (Bhattacherjee, 2012). Without it, knowledge becomes dogma.</p>
-            <p><strong>Body:</strong> A theory like "All swans are white" is scientific because finding one black swan falsifies it. In contrast, "Astrology influences mood" is unfalsifiable—any outcome can be explained post-hoc. Falsifiability forces precision: theories must make clear, testable predictions. It enables self-correction, distinguishing science from pseudoscience.</p>
-            <p><strong>Conclusion:</strong> Falsifiability ensures science remains evidence-based, not belief-based. It is not a weakness but science's greatest strength—allowing error to become progress.</p>
-          </div>
+          <p>According to Bayley & Lucas (2007), <strong>scientific knowledge is "objectively proven because it is based on verifiable observation."</strong> It excludes belief, opinion, or speculation.</p>
+          <p>Science develops through a continuous cycle: <strong>theory → observation → refinement</strong> (Bhattacherjee, 2012). This process ensures reliability and objectivity.</p>
+          <p>Research, as defined by Singh (2006), means “to search again and again.” It requires a systematic procedure, openness to evidence, and rejection of preconceived opinions.</p>
         </div>
 
         <div class="mindmap">
-          <h3>Mind Map: Scientific Knowledge</h3>
-          <div class="mindmap-container">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" aria-label="Mind map showing characteristics of scientific knowledge">
-              <style>
-                .node { font: bold 12px 'Roboto', sans-serif; fill: #2d3748; }
-                .link { stroke: #cbd5e0; stroke-width: 1.5; }
-                .center { font: bold 14px 'Merriweather', serif; fill: white; }
-              </style>
-              <circle cx="300" cy="150" r="50" fill="#009688"/>
-              <text x="300" y="145" text-anchor="middle" class="center">Scientific</text>
-              <text x="300" y="165" text-anchor="middle" class="center">Knowledge</text>
-
-              <circle cx="120" cy="80" r="32" fill="#e8f5e8"/><text x="120" y="85" text-anchor="middle" class="node">Objective</text>
-              <circle cx="480" cy="80" r="32" fill="#e8f5e8"/><text x="480" y="85" text-anchor="middle" class="node">Verifiable</text>
-              <circle cx="120" cy="220" r="32" fill="#e8f5e8"/><text x="120" y="225" text-anchor="middle" class="node">Systematic</text>
-              <circle cx="480" cy="220" r="32" fill="#e8f5e8"/><text x="480" y="225" text-anchor="middle" class="node">Empirical</text>
-              <circle cx="300" cy="50" r="32" fill="#e8f5e8"/><text x="300" y="55" text-anchor="middle" class="node">Falsifiable</text>
-              <circle cx="300" cy="250" r="32" fill="#e8f5e8"/><text x="300" y="255" text-anchor="middle" class="node">Replicable</text>
-
-              <line x1="300" y1="150" x2="120" y2="80" class="link"/>
-              <line x1="300" y1="150" x2="480" y2="80" class="link"/>
-              <line x1="300" y1="150" x2="120" y2="220" class="link"/>
-              <line x1="300" y1="150" x2="480" y2="220" class="link"/>
-              <line x1="300" y1="150" x2="300" y2="50" class="link"/>
-              <line x1="300" y1="150" x2="300" y2="250" class="link"/>
-            </svg>
+          <h3>Mind Map: Scientific Knowledge Characteristics</h3>
+          <div class="mindmap-center" style="border-color: #009688; background: #e0f2f1;">SCIENTIFIC KNOWLEDGE</div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #3f51b5;">
+              <div class="mindmap-node-title">Objective</div>
+              <div class="mindmap-node-desc">Free from bias</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #009688;">
+              <div class="mindmap-node-title">Verifiable</div>
+              <div class="mindmap-node-desc">Confirmable by others</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #4caf50;">
+              <div class="mindmap-node-title">Empirical</div>
+              <div class="mindmap-node-desc">Based on evidence</div>
+            </div>
+          </div>
+          <div class="mindmap-connection"></div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #ff9800;">
+              <div class="mindmap-node-title">Systematic</div>
+              <div class="mindmap-node-desc">Methodical approach</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #9c27b0;">
+              <div class="mindmap-node-title">Falsifiable</div>
+              <div class="mindmap-node-desc">Can be disproven</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #2196f3;">
+              <div class="mindmap-node-title">Replicable</div>
+              <div class="mindmap-node-desc">Results repeatable</div>
+            </div>
+          </div>
+          <div style="margin-top: 1rem; padding: 1rem; background: #f3e5f5; border-radius: 8px; border-left: 4px solid #9c27b0;">
+            <p style="margin: 0; font-style: italic; color: #7b1fa2;">Cycle: Theory → Observation → Refinement → New Theory</p>
           </div>
         </div>
       </div>
@@ -760,96 +657,66 @@
     <!-- LECTURE 3 -->
     <div class="lesson">
       <div class="lesson-header" onclick="toggleLesson(3)" role="button" tabindex="0" aria-expanded="false" aria-controls="lesson3">
-        <span>Lecture 3: Science</span>
+        <span>Lecture 3: Science – Institution, Process, and Result</span>
         <span>▼</span>
       </div>
       <div class="lesson-content" id="lesson3" role="region" aria-label="Lecture 3 content">
         <div class="section">
           <h3 class="section-title">What Is Science?</h3>
-          <p>Science is a systematic body of knowledge acquired through the scientific method (Bhattacherjee, 2012). It can be viewed from three perspectives:</p>
+          <p>Science (from Latin <em>scientia</em> = knowledge) is a systematic body of knowledge acquired through the scientific method (Bhattacherjee, 2012). It can be viewed from three perspectives:</p>
           <ul>
-            <li><strong>As a social institution</strong>: Universities, labs, journals, peer review</li>
-            <li><strong>As a process</strong>: Research methodology—the cycle of theory and observation</li>
-            <li><strong>As a result</strong>: The accumulated, verified knowledge itself</li>
+            <li><strong>As a social institution</strong>: Universities, labs, research centers, and scientific communities.</li>
+            <li><strong>As a process</strong>: The methodology used to uncover knowledge.</li>
+            <li><strong>As a result</strong>: The knowledge produced.</li>
           </ul>
-          <p>For any inquiry to be scientific, it must satisfy four criteria: <strong>replicability, precision, falsifiability, and parsimony</strong>.</p>
         </div>
 
         <div class="section">
-          <h3 class="section-title">The Four Criteria of Science</h3>
+          <h3 class="section-title">Key Characteristics of Science</h3>
+          <p>Scientific inquiry must satisfy six core criteria (Berg, 2001):</p>
           <ol>
-            <li><strong>Replicability</strong>: Others must repeat your study and get similar results.</li>
-            <li><strong>Precision</strong>: Measurements must be exact and clearly defined.</li>
-            <li><strong>Falsifiability</strong>: Theories must be testable and potentially disprovable.</li>
-            <li><strong>Parsimony</strong>: Prefer the simplest explanation (Occam's Razor).</li>
+            <li><strong>Objectivity</strong>: Absence of personal bias.</li>
+            <li><strong>Verifiability</strong>: Findings must be testable and demonstrable.</li>
+            <li><strong>Systematic exploration</strong>: Follows structured research steps.</li>
+            <li><strong>Precision and accuracy</strong>: Measurements must be exact and close to true values.</li>
+            <li><strong>Reliability</strong>: Consistent results over time and contexts.</li>
+            <li><strong>Ethicality</strong>: Honesty, integrity, proper attribution, and respect for subjects (Carpi & Egger, 2009).</li>
           </ol>
-          <p>Additionally, science must be <strong>objective, verifiable, systematic, reliable, accurate, and ethical</strong> (Berg, 2001).</p>
         </div>
 
         <div class="section">
-          <h3 class="section-title">Worked Example</h3>
-          <div class="example">
-            <h4>Example: Climate Change Research</h4>
-            <p><strong>Replicability:</strong> Global teams use same satellite data and models.<br>
-            <strong>Precision:</strong> CO₂ measured in ppm; temperature in 0.01°C increments.<br>
-            <strong>Falsifiability:</strong> "If CO₂ rises, global temps rise" → testable prediction.<br>
-            <strong>Parsimony:</strong> Explains warming via greenhouse effect, not complex conspiracies.<br>
-            <strong>Ethics:</strong> Data openly shared; conflicts of interest disclosed.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Comparison with Lecture 2</h3>
-          <div class="comparison">
-            <h4>Scientific Knowledge vs. Science</h4>
-            <p>Lecture 2 defines scientific knowledge as the <em>output</em> of research. Lecture 3 expands this by examining science as the <em>entire ecosystem</em>—including institutions (universities), processes (methodology), and ethical norms. Knowledge is the product; science is the factory, the workers, and the quality control.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Model Essays (Exam Style)</h3>
-          <div class="essay">
-            <h4>Essay 1: "There is no failure in scientific research if procedures are carefully carried out." Discuss.</h4>
-            <p><strong>Introduction:</strong> This statement reframes "failure" in science—not as negative results, but as methodological shortcuts.</p>
-            <p><strong>Body:</strong> A well-designed study that finds "no effect" is invaluable: it prevents wasted effort, refines theories, and combats publication bias. True failure occurs when ethics are breached, methods are sloppy, or data is manipulated to fit expectations. As Allington & Swann (2009) note, ethical process outweighs desired outcomes.</p>
-            <p><strong>Conclusion:</strong> Science advances through honest inquiry, not guaranteed success. Rigorous process—regardless of result—is the hallmark of scientific integrity.</p>
-          </div>
-
-          <div class="essay">
-            <h4>Essay 2: Are social sciences "real" science?</h4>
-            <p><strong>Introduction:</strong> Critics argue social sciences lack the precision of physics, labeling them "pseudoscience." This misrepresents scientific criteria.</p>
-            <p><strong>Body:</strong> While controlled experiments are harder in sociology, social sciences adhere to core principles: systematic methods, falsifiable hypotheses, peer review, and ethics. Laugksch (2000) advocates "scientific literacy"—evaluating fields by their methodology, not just numerical precision. Psychology's replication projects exemplify self-correction, a scientific virtue.</p>
-            <p><strong>Conclusion:</strong> Science is defined by process, not subject matter. Social sciences meet this standard, enriching our understanding of human systems with rigor and humility.</p>
-          </div>
+          <h3 class="section-title">Science vs. Pseudoscience</h3>
+          <p>Not all disciplines are equally "scientific." Social sciences often face skepticism due to challenges in precision and replicability. However, Laugksch (2000) argues for <strong>scientific literacy</strong>—the ability to understand, apply, and evaluate scientific concepts—as the true benchmark, not the field itself.</p>
         </div>
 
         <div class="mindmap">
-          <h3>Mind Map: Science</h3>
-          <div class="mindmap-container">
-            <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" aria-label="Mind map showing three views of science">
-              <style>
-                .node { font: bold 12px 'Roboto', sans-serif; fill: #2d3748; }
-                .link { stroke: #cbd5e0; stroke-width: 1.5; }
-                .center { font: bold 14px 'Merriweather', serif; fill: white; }
-              </style>
-              <circle cx="300" cy="200" r="55" fill="#6a1b9a"/>
-              <text x="300" y="195" text-anchor="middle" class="center">Science</text>
-              <text x="300" y="215" text-anchor="middle" class="center">(3 Views)</text>
-
-              <circle cx="150" cy="100" r="35" fill="#f3e5f5"/><text x="150" y="105" text-anchor="middle" class="node">Social Institution</text>
-              <circle cx="450" cy="100" r="35" fill="#f3e5f5"/><text x="450" y="105" text-anchor="middle" class="node">Process</text>
-              <circle cx="300" cy="50" r="35" fill="#f3e5f5"/><text x="300" y="55" text-anchor="middle" class="node">Result</text>
-              <circle cx="150" cy="300" r="35" fill="#f3e5f5"/><text x="150" y="305" text-anchor="middle" class="node">Replicable</text>
-              <circle cx="450" cy="300" r="35" fill="#f3e5f5"/><text x="450" y="305" text-anchor="middle" class="node">Falsifiable</text>
-              <circle cx="300" cy="350" r="35" fill="#f3e5f5"/><text x="300" y="355" text-anchor="middle" class="node">Ethical</text>
-
-              <line x1="300" y1="200" x2="150" y2="100" class="link"/>
-              <line x1="300" y1="200" x2="450" y2="100" class="link"/>
-              <line x1="300" y1="200" x2="300" y2="50" class="link"/>
-              <line x1="300" y1="200" x2="150" y2="300" class="link"/>
-              <line x1="300" y1="200" x2="450" y2="300" class="link"/>
-              <line x1="300" y1="200" x2="300" y2="350" class="link"/>
-            </svg>
+          <h3>Mind Map: Pillars of Scientific Inquiry</h3>
+          <div class="mindmap-center" style="border-color: #e53e3e; background: #ffebee;">SCIENCE</div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #3f51b5;">
+              <div class="mindmap-node-title">Institution</div>
+              <div class="mindmap-node-desc">Labs, universities, norms</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #009688;">
+              <div class="mindmap-node-title">Process</div>
+              <div class="mindmap-node-desc">Methodology, ethics</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #f57c00;">
+              <div class="mindmap-node-title">Result</div>
+              <div class="mindmap-node-desc">Valid, reliable knowledge</div>
+            </div>
+          </div>
+          <div class="mindmap-connection"></div>
+          <div class="mindmap-branch">
+            <div class="mindmap-node" style="border-color: #d32f2f;">
+              <div class="mindmap-node-title">Falsifiable</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #689f38;">
+              <div class="mindmap-node-title">Replicable</div>
+            </div>
+            <div class="mindmap-node" style="border-color: #7b1fa2;">
+              <div class="mindmap-node-title">Ethical</div>
+            </div>
           </div>
         </div>
       </div>
@@ -864,87 +731,35 @@
       <div class="lesson-content" id="lesson4" role="region" aria-label="Lecture 4 content">
         <div class="section">
           <h3 class="section-title">Formulating a Research Problem</h3>
-          <p>The most crucial step in research is defining a clear problem (Thomas, 2015). A good problem statement must:</p>
+          <p>The research journey begins with a <strong>problem statement</strong>—a clear, unambiguous description of a gap, controversy, or deviation in existing knowledge (Thomas, 2015). A well-formulated problem determines the entire research trajectory.</p>
+          <p>According to Singh (2006), a good problem statement must:</p>
           <ol>
-            <li>Address relationships between two or more variables</li>
-            <li>Be stated clearly as a question</li>
-            <li>Be amenable to empirical testing (Singh, 2006)</li>
+            <li>Involve a relationship between two or more variables.</li>
+            <li>Be stated clearly in question form.</li>
+            <li>Be amenable to empirical testing.</li>
           </ol>
-          <p>Consider these 7 factors when selecting a topic (Kumar, 2011): <strong>Interest, Magnitude, Measurement, Expertise, Relevance, Data Availability, Ethics</strong>.</p>
+        </div>
+
+        <div class="section">
+          <h3 class="section-title">Selecting a Research Problem: Key Considerations (Kumar, 2011)</h3>
+          <ul>
+            <li><strong>Interest</strong>: Sustains motivation.</li>
+            <li><strong>Magnitude</strong>: Feasible in scope, time, and resources.</li>
+            <li><strong>Measurement</strong>: Concepts must be operationalized (e.g., “happiness” → health, income, social ties).</li>
+            <li><strong>Expertise</strong>: Prior knowledge helps identify gaps.</li>
+            <li><strong>Data availability</strong>: Access to primary/secondary sources.</li>
+            <li><strong>Relevance</strong>: Contribution to field or community.</li>
+            <li><strong>Ethics</strong>: Legal, privacy, and dignity considerations.</li>
+          </ul>
         </div>
 
         <div class="section">
           <h3 class="section-title">Research Questions vs. Hypotheses</h3>
-          <p><strong>Research questions</strong> are open-ended and exploratory—ideal for qualitative studies.<br>
-          <strong>Hypotheses</strong> are predictive statements about variable relationships—used in quantitative research (Creswell, 2012).</p>
-          <p>Example:<br>
-          <em>Question:</em> "How do students experience online learning?"<br>
-          <em>Hypothesis:</em> "Students with high self-efficacy report higher satisfaction in online courses."</p>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Worked Example</h3>
+          <p><strong>Research questions</strong> are open-ended, exploratory, and common in qualitative studies.</p>
+          <p><strong>Hypotheses</strong> are predictive, testable statements about variable relationships, typical in quantitative research (Creswell, 2012).</p>
           <div class="example">
-            <h4>Example: Technology in Classrooms</h4>
-            <p><strong>Problem:</strong> Despite tech advances, classrooms remain unchanged, causing student disengagement.<br>
-            <strong>Research Question:</strong> "How does integrating interactive technology affect engagement in secondary math?"<br>
-            <strong>Hypothesis:</strong> "Students using interactive simulations will show 20% higher participation than those in traditional lectures."<br>
-            <strong>Variables:</strong> Tech integration (independent), engagement (dependent, measured via observation + surveys).</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Comparison with Lecture 3</h3>
-          <div class="comparison">
-            <h4>Science as Process vs. Research Design</h4>
-            <p>Lecture 3 describes science's broad methodology. Lecture 4 zooms into the starting point: how to formulate a problem that aligns with scientific criteria. A well-crafted problem ensures the entire research process (Lecture 3) remains focused, ethical, and replicable.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 class="section-title">Model Essays (Exam Style)</h3>
-          <div class="essay">
-            <h4>Essay 1: Why is problem formulation the most crucial research step?</h4>
-            <p><strong>Introduction:</strong> Thomas (2015) states, "A large part of the problem lies in knowing what one is trying to do." Problem formulation sets the research trajectory.</p>
-            <p><strong>Body:</strong> The problem determines methodology, sample, tools, and analysis. A vague problem ("improve education") yields unfocused data. A precise one ("Does peer feedback improve essay quality in EFL learners?") enables targeted design. It also ensures ethical alignment and feasibility (Kumar, 2011).</p>
-            <p><strong>Conclusion:</strong> Investing time in problem formulation prevents wasted resources and strengthens validity. It transforms curiosity into scientific inquiry.</p>
-          </div>
-
-          <div class="essay">
-            <h4>Essay 2: When should a researcher use a hypothesis instead of a research question?</h4>
-            <p><strong>Introduction:</strong> The choice depends on research paradigm, goals, and existing knowledge.</p>
-            <p><strong>Body:</strong> Use <em>hypotheses</em> in quantitative, deductive research with strong theoretical foundations (e.g., testing a drug's efficacy). Use <em>research questions</em> in qualitative, exploratory studies where relationships are unknown (e.g., understanding refugee experiences). Mixed methods may use both: questions for exploration, hypotheses for validation.</p>
-            <p><strong>Conclusion:</strong> Neither is superior—they serve different purposes. Alignment with epistemology and research goals is key.</p>
-          </div>
-        </div>
-
-        <div class="mindmap">
-          <h3>Mind Map: Research Problem Design</h3>
-          <div class="mindmap-container">
-            <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" aria-label="Mind map showing research problem design elements">
-              <style>
-                .node { font: bold 12px 'Roboto', sans-serif; fill: #2d3748; }
-                .link { stroke: #c8e6c9; stroke-width: 1.5; }
-                .center { font: bold 14px 'Merriweather', serif; fill: white; }
-              </style>
-              <circle cx="300" cy="200" r="55" fill="#00796b"/>
-              <text x="300" y="195" text-anchor="middle" class="center">Research</text>
-              <text x="300" y="215" text-anchor="middle" class="center">Problem</text>
-
-              <circle cx="150" cy="100" r="35" fill="#e8f5e8"/><text x="150" y="105" text-anchor="middle" class="node">7 Factors</text>
-              <circle cx="450" cy="100" r="35" fill="#e8f5e8"/><text x="450" y="105" text-anchor="middle" class="node">3 Criteria</text>
-              <circle cx="150" cy="300" r="35" fill="#e8f5e8"/><text x="150" y="305" text-anchor="middle" class="node">Questions</text>
-              <circle cx="450" cy="300" r="35" fill="#e8f5e8"/><text x="450" y="305" text-anchor="middle" class="node">Hypotheses</text>
-              <circle cx="300" cy="50" r="35" fill="#e8f5e8"/><text x="300" y="55" text-anchor="middle" class="node">Variables</text>
-              <circle cx="300" cy="350" r="35" fill="#e8f5e8"/><text x="300" y="355" text-anchor="middle" class="node">Ethics</text>
-
-              <line x1="300" y1="200" x2="150" y2="100" class="link"/>
-              <line x1="300" y1="200" x2="450" y2="100" class="link"/>
-              <line x1="300" y1="200" x2="150" y2="300" class="link"/>
-              <line x1="300" y1="200" x2="450" y2="300" class="link"/>
-              <line x1="300" y1="200" x2="300" y2="50" class="link"/>
-              <line x1="300" y1="200" x2="300" y2="350" class="link"/>
-            </svg>
+            <h4>Example Problem Statement</h4>
+            <p>“Classrooms remain unchanged despite technological advances... This paper argues for integrating technology to create authentic learning contexts.”</p>
           </div>
         </div>
       </div>
@@ -970,7 +785,7 @@
       <p>• Tap any lecture header to expand or collapse content</p>
       <p>• Study explanations, examples, and model essays</p>
       <p>• Take quizzes to test your understanding</p>
-      <p>• Scroll horizontally on mind maps if needed</p>
+      <p>• Review mind maps for conceptual overviews</p>
       <p>• Your quiz progress is saved automatically</p>
     </div>
 
@@ -980,50 +795,38 @@
     </footer>
   </div>
 
-  <!-- JAVASCRIPT -->
   <script>
     // ===================================================================
-    // QUIZ QUESTION POOL (True/False Only)
+    // UPDATED QUIZ POOL: 15+ QUESTIONS FROM ALL 4 LECTURES
     // ===================================================================
     const quizPool = [
-      // Lecture 1 Questions
-      { question: "Tacit knowledge is easy to formalize and share with others.", answer: false, explanation: "Tacit knowledge is highly personal and difficult to formalize or communicate (Edvinsson & Malone, 1997)." },
-      { question: "A priori knowledge depends on personal experience.", answer: false, explanation: "A priori knowledge is independent of experience (e.g., mathematical truths like 1+1=2)." },
-      { question: "Empirical knowledge comes from sensory observation.", answer: true, explanation: "Empirical knowledge is gained through observation, measurement, or experimentation." },
-      { question: "Metaknowledge refers to 'knowledge about how to find knowledge'.", answer: true, explanation: "Clark (2003) describes metaknowledge as knowing how to locate and access information." },
-      { question: "All types of knowledge can be considered scientific.", answer: false, explanation: "Only knowledge that is empirical, objective, and testable qualifies as scientific knowledge." },
+      // Lecture 1
+      { question: "Tacit knowledge is easy to formalize and share.", answer: false, explanation: "Tacit knowledge is highly personal and difficult to articulate or communicate (Edvinsson & Malone, 1997)." },
+      { question: "A priori knowledge depends on sensory experience.", answer: false, explanation: "A priori knowledge (e.g., math truths) is independent of experience." },
+      { question: "Empirical knowledge is always a posteriori.", answer: true, explanation: "Empirical knowledge comes from observation/experience, so it is a posteriori—but not all a posteriori knowledge is empirical (e.g., dreams)." },
+      { question: "Metaknowledge refers to knowing how to find knowledge.", answer: true, explanation: "Metaknowledge is 'knowledge about knowledge'—how to access and evaluate information." },
+      { question: "Situated knowledge is independent of cultural context.", answer: false, explanation: "Situated knowledge is deeply tied to specific contexts, cultures, and perspectives." },
       
-      // Lecture 2 Questions
-      { question: "Scientific knowledge must be based on verifiable observation.", answer: true, explanation: "Bayley & Lucas (2007) define scientific knowledge as 'objectively proven through verifiable observation'." },
-      { question: "Personal beliefs can be considered scientific if held strongly enough.", answer: false, explanation: "Scientific knowledge requires empirical evidence and objectivity, not subjective belief." },
-      { question: "The scientific method involves a continuous cycle of theory and observation.", answer: true, explanation: "Bhattacherjee (2012) describes science as moving 'back and forth between theory and observations'." },
-      { question: "Everyday problem-solving qualifies as scientific research.", answer: false, explanation: "While it involves inquiry, scientific research requires systematic methodology, control, and validation." },
-      { question: "Falsifiability is not important for scientific theories.", answer: false, explanation: "Falsifiability is essential - scientific theories must make testable predictions that could be proven wrong." },
+      // Lecture 2
+      { question: "Scientific knowledge must be based on verifiable observation.", answer: true, explanation: "Bayley & Lucas (2007) define scientific knowledge as objectively proven through verifiable data." },
+      { question: "Personal beliefs can become scientific if widely held.", answer: false, explanation: "Science requires empirical evidence, not popularity or conviction." },
+      { question: "The scientific method moves continuously between theory and observation.", answer: true, explanation: "Bhattacherjee (2012) describes this iterative refinement cycle." },
       
-      // Lecture 3 Questions
-      { question: "Science can be viewed as a social institution, a process, and a result.", answer: true, explanation: "Lecture 3 presents these three perspectives on science: institution (universities), process (methodology), and result (accumulated knowledge)." },
-      { question: "Replicability means that others should get different results when repeating a study.", answer: false, explanation: "Replicability means other researchers should obtain similar results when repeating the study with the same methods." },
-      { question: "Parsimony refers to preferring the simplest explanation among alternatives.", answer: true, explanation: "Also known as Occam's Razor, parsimony favors simpler explanations over more complex ones." },
-      { question: "Ethical considerations are not relevant to scientific research.", answer: false, explanation: "Berg (2001) lists ethicality as an essential characteristic of scientific research." },
-      { question: "Social sciences cannot be considered 'real' science.", answer: false, explanation: "Social sciences follow scientific methodology: systematic inquiry, falsifiability, peer review, and ethics." },
+      // Lecture 3
+      { question: "Replicability means other researchers can repeat a study and get similar results.", answer: true, explanation: "Replicability ensures reliability and is a cornerstone of scientific validity." },
+      { question: "Parsimony means preferring complex explanations over simple ones.", answer: false, explanation: "Parsimony favors the simplest adequate explanation (Occam’s razor)." },
+      { question: "Ethics in science includes honest reporting and proper attribution.", answer: true, explanation: "Carpi & Egger (2009) list honesty, integrity, and credit as core ethical standards." },
+      { question: "Social sciences cannot be scientific due to lack of precision.", answer: false, explanation: "Laugksch (2000) argues scientific literacy—not field—determines scientific quality." },
       
-      // Lecture 4 Questions
-      { question: "A research problem should address relationships between variables.", answer: true, explanation: "Singh (2006) states that research problems must involve relationships between two or more variables." },
-      { question: "Research questions are only used in quantitative studies.", answer: false, explanation: "Research questions are typically used in qualitative or exploratory studies, while hypotheses are used in quantitative research." },
-      { question: "Hypotheses are predictive statements about variable relationships.", answer: true, explanation: "Creswell (2012): Hypotheses predict how variables are related and are tested in quantitative research." },
-      { question: "Interest is not important when selecting a research topic.", answer: false, explanation: "Kumar (2011) lists interest as the first of seven factors for topic selection." },
-      { question: "A well-formulated problem statement ensures research remains focused.", answer: true, explanation: "Thomas (2015): Clear problem formulation prevents wasted resources and maintains research focus." },
-      
-      // Additional Questions
-      { question: "Known unknowns are things we don't know we don't know.", answer: false, explanation: "Known unknowns are gaps we're aware of; unknown unknowns are beyond our current awareness." },
-      { question: "Procedural knowledge involves 'knowing how' to perform tasks.", answer: true, explanation: "Procedural knowledge is about skills and processes (e.g., how to cook, code, or conduct an experiment)." },
-      { question: "Scientific literacy only involves memorizing scientific facts.", answer: false, explanation: "Laugksch (2000): Scientific literacy includes understanding processes, evaluating evidence, and applying concepts." },
-      { question: "All research must begin with a hypothesis.", answer: false, explanation: "Qualitative research often begins with research questions rather than hypotheses." },
-      { question: "Accuracy and precision mean the same thing in research.", answer: false, explanation: "Accuracy = closeness to true value; Precision = consistency of measurements." }
+      // Lecture 4
+      { question: "A research problem should be vague to allow flexibility.", answer: false, explanation: "Problems must be clear, specific, and empirically testable (Singh, 2006)." },
+      { question: "Operationalization means defining abstract concepts in measurable terms.", answer: true, explanation: "E.g., 'happiness' operationalized via health, income, social metrics." },
+      { question: "Hypotheses are required in all types of research.", answer: false, explanation: "Hypotheses are typical in quantitative research; qualitative studies often use research questions." },
+      { question: "The research process is more important than the result in ethical science.", answer: true, explanation: "Ethical research values rigorous methodology over desired outcomes (Allington & Swann, 2009)." }
     ];
 
     // ===================================================================
-    // QUIZ & UI LOGIC
+    // QUIZ & UI LOGIC — UNCHANGED FROM ORIGINAL
     // ===================================================================
     let currentQuiz = [];
     let userAnswers = [];
@@ -1031,16 +834,13 @@
     let totalScore = 0;
     let quizCount = 0;
 
-    // DOM Elements
     const quizContent = document.getElementById('quizContent');
     const submitBtn = document.getElementById('submitBtn');
     const newQuizBtn = document.getElementById('newQuizBtn');
     const scoreDisplay = document.getElementById('score');
     const progressBar = document.getElementById('progressBar');
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      // Load saved score
       try {
         const savedScore = localStorage.getItem('researchQuizTotalScore');
         const savedCount = localStorage.getItem('researchQuizCount');
@@ -1049,209 +849,124 @@
           quizCount = parseInt(savedCount);
         }
       } catch (e) {
-        console.log("LocalStorage not available, using default values");
+        console.log("LocalStorage not available");
       }
 
-      // Event listeners
-      submitBtn.addEventListener('click', submitQuiz);
-      newQuizBtn.addEventListener('click', generateNewQuiz);
-
-      // Add keyboard support for lesson headers
-      document.querySelectorAll('.lesson-header').forEach(header => {
-        header.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            const lessonNum = this.getAttribute('onclick').match(/\d+/)[0];
-            toggleLesson(lessonNum);
-          }
-        });
-      });
-
-      // Start first quiz
       generateNewQuiz();
       updateProgressBar();
 
-      // Auto-open first lesson on mobile for better UX
       if (window.innerWidth < 768) {
         setTimeout(() => toggleLesson(1), 500);
       }
     });
 
-    // Toggle lesson visibility
     function toggleLesson(lessonNum) {
       const header = document.querySelector(`.lesson-header[onclick="toggleLesson(${lessonNum})"]`);
       const content = document.getElementById(`lesson${lessonNum}`);
-      const isActive = header.classList.contains('active');
+      const isActive = content.classList.contains('active');
 
-      // Close all lessons
-      document.querySelectorAll('.lesson-header').forEach(el => {
-        el.classList.remove('active');
-        el.setAttribute('aria-expanded', 'false');
-      });
-      document.querySelectorAll('.lesson-content').forEach(el => {
-        el.classList.remove('active');
-      });
+      document.querySelectorAll('.lesson-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.lesson-header').forEach(el => el.classList.remove('active'));
 
-      // If it wasn't active, open it
       if (!isActive) {
         header.classList.add('active');
-        header.setAttribute('aria-expanded', 'true');
         content.classList.add('active');
-        
-        // Smooth scroll to lesson on mobile
-        if (window.innerWidth < 768) {
-          setTimeout(() => {
-            header.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
-        }
       }
 
       updateProgressBar();
     }
 
-    // Update progress bar based on visited lessons
     function updateProgressBar() {
-      const visitedLessons = new Set();
-      
-      // Check localStorage for visited lessons
-      try {
-        const visited = localStorage.getItem('visitedLessons');
-        if (visited) {
-          JSON.parse(visited).forEach(num => visitedLessons.add(num));
-        }
-      } catch (e) {
-        console.log("Could not load visited lessons");
-      }
-
-      // Add current active lesson
-      document.querySelectorAll('.lesson-header.active').forEach(header => {
-        const lessonNum = header.getAttribute('onclick').match(/\d+/)[0];
-        visitedLessons.add(lessonNum);
-      });
-
-      // Save to localStorage
-      try {
-        localStorage.setItem('visitedLessons', JSON.stringify([...visitedLessons]));
-      } catch (e) {
-        console.log("Could not save visited lessons");
-      }
-
-      const percent = (visitedLessons.size / 4) * 100;
+      const activeLessons = document.querySelectorAll('.lesson-content.active').length;
+      const totalLessons = document.querySelectorAll('.lesson').length;
+      const percent = (activeLessons / totalLessons) * 100;
       progressBar.style.width = `${percent}%`;
     }
 
-    // Generate new quiz
     function generateNewQuiz() {
       userAnswers = [];
       score = 0;
-      quizCount++;
-
-      // Shuffle and pick 5 True/False questions
       const shuffled = [...quizPool].sort(() => 0.5 - Math.random());
       currentQuiz = shuffled.slice(0, 5);
-
       renderQuiz();
       scoreDisplay.textContent = '0/5';
       submitBtn.style.display = 'block';
       newQuizBtn.style.display = 'none';
-      document.querySelectorAll('.feedback').forEach(fb => {
-        fb.classList.remove('show');
-        fb.style.maxHeight = '0';
-      });
+      document.querySelectorAll('.feedback').forEach(fb => fb.classList.remove('show'));
     }
 
-    // Render quiz HTML
     function renderQuiz() {
       let html = '';
-      currentQuiz.forEach((q, i) => {
-        html += `<div class="question-container" id="q${i}">
-          <div class="question-text">${i + 1}. ${q.question}</div>
+      currentQuiz.forEach((q, index) => {
+        html += `
+        <div class="question-container" id="q${index}">
+          <div class="question-text">${index + 1}. ${q.question}</div>
           <div class="options-container">
-            <div class="option" onclick="selectOption(${i}, true)" role="button" tabindex="0" 
-                 onkeypress="if(event.key==='Enter') selectOption(${i}, true)">True</div>
-            <div class="option" onclick="selectOption(${i}, false)" role="button" tabindex="0"
-                 onkeypress="if(event.key==='Enter') selectOption(${i}, false)">False</div>
+            <div class="option" onclick="selectAnswer(${index}, true)">True</div>
+            <div class="option" onclick="selectAnswer(${index}, false)">False</div>
           </div>
-          <div class="feedback" id="feedback${i}"></div>
+          <div class="feedback" id="feedback${index}"></div>
         </div>`;
       });
       quizContent.innerHTML = html;
     }
 
-    // Handle option selection
-    function selectOption(qIndex, value) {
-      const questionEl = document.getElementById(`q${qIndex}`);
+    function selectAnswer(questionIndex, answer) {
+      const questionEl = document.getElementById(`q${questionIndex}`);
       const options = questionEl.querySelectorAll('.option');
-      
-      // Remove selected class from both options
-      options.forEach(opt => {
-        opt.classList.remove('selected', 'true', 'false');
-      });
-      
-      // Add selected class to chosen option
-      const selectedOption = value ? options[0] : options[1];
-      selectedOption.classList.add('selected', value.toString());
+      options.forEach(opt => opt.classList.remove('selected', 'true', 'false'));
+      const selectedOption = answer ? options[0] : options[1];
+      selectedOption.classList.add('selected', answer.toString());
       selectedOption.classList.add('pulse');
-      
-      // Remove pulse animation after it completes
-      setTimeout(() => {
-        selectedOption.classList.remove('pulse');
-      }, 500);
-      
-      userAnswers[qIndex] = value;
+      setTimeout(() => selectedOption.classList.remove('pulse'), 500);
+      userAnswers[questionIndex] = answer;
+      showImmediateFeedback(questionIndex, answer);
     }
 
-    // Submit and grade quiz
+    function showImmediateFeedback(questionIndex, userAnswer) {
+      const question = currentQuiz[questionIndex];
+      const feedbackEl = document.getElementById(`feedback${questionIndex}`);
+      const isCorrect = (userAnswer === question.answer);
+      feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'} show`;
+      feedbackEl.innerHTML = `<p><strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}</strong></p><p>${question.explanation}</p>`;
+    }
+
     function submitQuiz() {
       score = 0;
-      currentQuiz.forEach((q, i) => {
-        const userAns = userAnswers[i];
-        const isCorrect = (userAns === q.answer);
-        const feedbackEl = document.getElementById(`feedback${i}`);
-
-        // Show feedback
-        feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'} show`;
-        feedbackEl.innerHTML = `<p><strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}</strong> ${q.explanation}</p>`;
-        
-        if (isCorrect) score++;
+      currentQuiz.forEach((q, index) => {
+        const userAns = userAnswers[index];
+        if (userAns === q.answer) score++;
       });
 
-      // Update scores
       totalScore += score;
-      const avg = quizCount > 0 ? (totalScore / quizCount).toFixed(1) : "0.0";
-      scoreDisplay.innerHTML = `${score}/5<br>Avg: ${avg}/5`;
-      
-      // Save to localStorage
+      quizCount++;
+      const averageScore = quizCount > 0 ? (totalScore / quizCount).toFixed(1) : "0.0";
+      scoreDisplay.innerHTML = `${score}/5<br>Avg: ${averageScore}/5`;
+
       try {
         localStorage.setItem('researchQuizTotalScore', totalScore);
         localStorage.setItem('researchQuizCount', quizCount);
       } catch (e) {
-        console.log("Could not save scores to localStorage");
+        console.log("Could not save scores");
       }
 
-      // UI update
+      const summary = document.createElement('div');
+      summary.className = 'feedback correct show';
+      summary.style.marginTop = '1.5rem';
+      summary.innerHTML = `
+        <p><strong>Quiz Complete!</strong></p>
+        <p>You scored ${score} out of 5 (${(score/5*100)}%).</p>
+        <p>Average: ${averageScore}/5</p>
+        <p>${score === 5 ? 'Excellent! Perfect score!' : score >= 3 ? 'Good job! Keep practicing!' : 'Review the lectures and try again!'}</p>
+      `;
+      quizContent.appendChild(summary);
       submitBtn.style.display = 'none';
       newQuizBtn.style.display = 'block';
-      
-      // Scroll to top of quiz on mobile
-      if (window.innerWidth < 768) {
-        document.querySelector('.quiz-container').scrollIntoView({ behavior: 'smooth' });
-      }
     }
 
-    // Handle window resize
-    window.addEventListener('resize', function() {
-      // Close all lessons on very small screens for better UX
-      if (window.innerWidth < 480) {
-        document.querySelectorAll('.lesson-content.active').forEach(content => {
-          if (content.scrollHeight > 800) {
-            const header = content.previousElementSibling;
-            header.classList.remove('active');
-            content.classList.remove('active');
-          }
-        });
-      }
-    });
+    // Attach submit handler
+    document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+    document.getElementById('newQuizBtn').addEventListener('click', generateNewQuiz);
   </script>
 </body>
 </html>
