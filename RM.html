@@ -350,16 +350,23 @@
 /* Better mobile-specific styles */
 @media (max-width: 768px) {
   .feedback {
-    margin-top: 0.8rem;
-    border-radius: 6px;
+    max-height: 0;              /* stays closed */
+    padding: 0;
+    overflow: hidden;
   }
-  
+
   .feedback.show {
-    max-height: none; /* Remove height restriction on mobile */
-    padding: 0.9rem;
-    overflow: visible; /* Allow full content display */
+    max-height: 1000px;         /* enough for long text */
+    padding: 1rem;
+    overflow: visible;
   }
-  
+
+  .feedback * {
+    font-size: 1rem;
+    line-height: 1.55;
+    word-wrap: break-word;
+  }
+}  
   .feedback-content {
     display: flex;
     flex-direction: column;
@@ -379,23 +386,18 @@
   }
   
   /* For really small screens */
-  @media (max-width: 480px) {
-    .feedback.show {
-      padding: 0.8rem;
-    }
-    
-    .feedback.correct,
-    .feedback.incorrect {
-      border-left-width: 4px; /* Slightly thinner on very small screens */
-    }
-    
-    /* Prevent text from being cut off */
-    .feedback * {
-      max-width: 100%;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
+@media (max-width: 480px) {
+  .feedback.show {
+    max-height: 1400px;         /* extra for small screens */
+    padding: 0.9rem;
   }
+
+  .feedback.correct,
+  .feedback.incorrect {
+    border-left-width: 4px;
+  }
+}
+}
 }
 
     /* Additional animation for better UX */
