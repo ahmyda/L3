@@ -23,7 +23,7 @@
       --error: #e53e3e;
       --shadow: 0 4px 12px rgba(0,0,0,0.06);
       --radius: 12px;
-      --transition: all 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     *, *::before, *::after {
@@ -323,98 +323,31 @@
       color: var(--error);
     }
 
+    /* FEEDBACK - ADDED IN THE CORRECT POSITION */
     .feedback {
-  margin-top: 1rem;
-  padding: 0;
-  border-radius: 8px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1), padding 0.3s ease;
-}
+      margin-top: 1rem;
+      padding: 0;
+      border-radius: 8px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1), padding 0.3s ease;
+    }
 
-.feedback.show {
-  max-height: 500px; /* Increased for better mobile viewing */
-  padding: 1rem;
-}
-
-.feedback.correct {
-  background: #e8f5e9;
-  border-left: 6px solid var(--success);
-}
-
-.feedback.incorrect {
-  background: #fff5f5;
-  border-left: 6px solid var(--error);
-}
-
-/* Better mobile-specific styles */
-@media (max-width: 768px) {
-  .feedback {
-    max-height: 0;              /* stays closed */
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .feedback.show {
-    max-height: 1000px;         /* enough for long text */
-    padding: 1rem;
-    overflow: visible;
-  }
-
-  .feedback * {
-    font-size: 1rem;
-    line-height: 1.55;
-    word-wrap: break-word;
-  }
-}  
-  .feedback-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .feedback-icon {
-    font-size: 1.4rem; /* Larger icons on mobile */
-    align-self: flex-start;
-  }
-  
-  /* Ensure text is readable */
-  .feedback p,
-  .feedback strong {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-  
-  /* For really small screens */
-@media (max-width: 480px) {
-  .feedback.show {
-    max-height: 1400px;         /* extra for small screens */
-    padding: 0.9rem;
-  }
-
-  .feedback.correct,
-  .feedback.incorrect {
-    border-left-width: 4px;
-  }
-}
-}
-}
-
-    /* Additional animation for better UX */
     .feedback.show {
-      animation: feedbackSlideIn 0.4s ease-out;
+      max-height: 500px;
+      padding: 1rem;
     }
-    
-    @keyframes feedbackSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+
+    .feedback.correct {
+      background: #e8f5e9;
+      border-left: 6px solid var(--success);
     }
+
+    .feedback.incorrect {
+      background: #fff5f5;
+      border-left: 6px solid var(--error);
+    }
+
     /* BUTTONS */
     .btn {
       background: var(--primary);
@@ -517,6 +450,35 @@
       .essay, .example, .comparison {
         padding: 0.9rem;
       }
+      
+      /* FEEDBACK ON MOBILE */
+      .feedback {
+        margin-top: 0.8rem;
+        border-radius: 6px;
+      }
+      
+      .feedback.show {
+        max-height: none; /* Remove height restriction on mobile */
+        padding: 0.9rem;
+        overflow: visible; /* Allow full content display */
+      }
+      
+      .feedback-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .feedback-icon {
+        font-size: 1.4rem;
+        align-self: flex-start;
+      }
+      
+      .feedback p,
+      .feedback strong {
+        font-size: 1rem;
+        line-height: 1.5;
+      }
     }
 
     @media (max-width: 480px) {
@@ -538,6 +500,22 @@
       .option {
         padding: 0.9rem 0.7rem;
       }
+      
+      /* FEEDBACK ON VERY SMALL SCREENS */
+      .feedback.show {
+        padding: 0.8rem;
+      }
+      
+      .feedback.correct,
+      .feedback.incorrect {
+        border-left-width: 4px;
+      }
+      
+      .feedback * {
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
     }
 
     /* ANIMATIONS */
@@ -555,7 +533,23 @@
     .pulse {
       animation: pulse 0.5s ease;
     }
-  </style>
+
+    /* FEEDBACK ANIMATION - MOVED TO BOTTOM */
+    @keyframes feedbackSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feedback.show {
+      animation: feedbackSlideIn 0.4s ease-out;
+    }
+</style>
 </head>
 <body>
   <div class="container">
